@@ -1,0 +1,3 @@
+Klipper\Bundle\ApiBundle\Representation\ResultErrors:
+    accessor_order: custom
+    custom_accessor_order: [message, errors, children]

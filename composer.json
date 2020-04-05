@@ -1,0 +1,41 @@
+{
+    "name": "klipper/api-bundle",
+    "type": "symfony-bundle",
+    "description": "API bundle of Klipper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "François Pluchino",
+            "email": "francois.pluchino@klipper.dev"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.4.0",
+        "klipper/doctrine-extensions-extra-bundle": "^2.0.0",
+        "klipper/expression-language": "^2.0.0",
+        "klipper/translation-bundle": "^2.0.0",
+        "klipper/resource-bundle": "^2.0.0",
+        "jms/serializer-bundle": "^3.2.0",
+        "symfony/form": "^4.3.0",
+        "symfony/framework-bundle": "^4.3.0",
+        "symfony/security-core": "^4.3.0"
+    },
+    "require-dev": {
+        "klipper/content-bundle": "^2.0.0",
+        "klipper/metadata-bundle": "^2.0.0",
+        "klipper/security-extra-bundle": "^2.0.0"
+    },
+    "autoload": {
+        "psr-4": { "Klipper\\Bundle\\ApiBundle\\": "" },
+        "exclude-from-classmap": [
+            "**/Tests/"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0-dev"
+        }
+    }
+}

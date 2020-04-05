@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="klipper_api.listener.format_subscriber"
+                 class="Klipper\Bundle\ApiBundle\Listener\FormatSubscriber"
+                 public="false">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="klipper_api.request_matcher" />
+            <argument type="service" id="klipper_api.view_handler" />
+            <argument type="service" id="klipper_translation.exception_message_manager" />
+            <argument type="service" id="klipper_api.serializer" />
+            <argument /> <!-- default type mime -->
+            <argument /> <!-- throw unsupported type mime -->
+            <argument /> <!-- debug mode -->
+        </service>
+    </services>
+</container>

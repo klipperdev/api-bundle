@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="klipper_api.view_transformer.pagination" class="Klipper\Bundle\ApiBundle\View\Transformer\PaginationTransformer" public="false">
+            <tag name="klipper_api.view_transformer" />
+            <argument type="service" id="klipper_doctrine_extensions_extra.request_query.pagination" />
+        </service>
+
+        <service id="klipper_api.view_transformer.translatable" class="Klipper\Bundle\ApiBundle\View\Transformer\TranslatableTransformer" public="false">
+            <tag name="klipper_api.view_transformer" />
+        </service>
+
+        <service id="klipper_api.view_transformer.sortable" class="Klipper\Bundle\ApiBundle\View\Transformer\SortableTransformer" public="false">
+            <tag name="klipper_api.view_transformer" />
+            <argument type="service" id="klipper_doctrine_extensions_extra.request_query.sortable" />
+        </service>
+
+        <service id="klipper_api.view_transformer.filterable" class="Klipper\Bundle\ApiBundle\View\Transformer\FilterableTransformer" public="false">
+            <tag name="klipper_api.view_transformer" />
+            <argument type="service" id="klipper_doctrine_extensions_extra.request_query.filterable" />
+        </service>
+
+        <service id="klipper_api.view_transformer.searchable" class="Klipper\Bundle\ApiBundle\View\Transformer\SearchableTransformer" public="false">
+            <tag name="klipper_api.view_transformer" />
+            <argument type="service" id="klipper_doctrine_extensions_extra.request_query.searchable" />
+        </service>
+    </services>
+</container>

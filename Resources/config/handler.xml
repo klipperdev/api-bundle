@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="klipper_api.controller_handler"
+                 class="Klipper\Bundle\ApiBundle\Controller\ControllerHandler"
+                 public="true">
+            <argument type="service" id="klipper_resource.domain_manager" />
+            <argument type="service" id="klipper_resource.form_handler" />
+            <argument type="service" id="klipper_translation.exception_translator" />
+            <argument type="service" id="request_stack" />
+        </service>
+
+        <service id="Klipper\Bundle\ApiBundle\Controller\ControllerHandler" alias="klipper_api.controller_handler" />
+
+        <service id="klipper_api.view_handler"
+                 class="Klipper\Bundle\ApiBundle\View\ViewHandler"
+                 public="true">
+            <argument type="service" id="request_stack" />
+            <argument type="service" id="klipper_api.serializer" />
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="klipper_security.security_identity_manager" on-invalid="null" />
+            <argument /> <!-- empty content -->
+            <argument /> <!-- serialize null -->
+        </service>
+
+        <service id="Klipper\Bundle\ApiBundle\View\ViewHandler" alias="klipper_api.view_handler" />
+        <service id="Klipper\Bundle\ApiBundle\View\ViewHandlerInterface" alias="klipper_api.view_handler" />
+    </services>
+</container>
