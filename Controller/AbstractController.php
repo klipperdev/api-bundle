@@ -224,7 +224,7 @@ class AbstractController implements ServiceSubscriberInterface
     private function getService(string $name)
     {
         if (!$this->container->has($name)) {
-            throw new ServiceNotFoundException($name, null, null, [], sprintf('The "%s::%s()" method is missing a service to work properly. Did you forget to register your controller as a service subscriber? This can be fixed either by using autoconfiguration or by manually wiring a "'.$name.'" in the service locator passed to the controller.', \get_class($this), __FUNCTION__));
+            throw new ServiceNotFoundException($name, null, null, [], sprintf('The "%s::%s()" method is missing a service to work properly. Did you forget to register your controller as a service subscriber? This can be fixed either by using autoconfiguration or by manually wiring a "'.$name.'" in the service locator passed to the controller.', static::class, __FUNCTION__));
         }
 
         return $this->container->get($name);
