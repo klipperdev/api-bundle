@@ -49,8 +49,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->addDefaultsIfNotSet()
             ->children()
-            ->scalarNode('base_host')->end()
-            ->scalarNode('base_path')->defaultValue('')->end()
+            ->scalarNode('base_host')->defaultNull()->end()
+            ->scalarNode('base_path')->defaultNull()->end()
             ->end()
         ;
 
