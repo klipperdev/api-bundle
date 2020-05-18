@@ -29,4 +29,11 @@ abstract class ViewGroups
      * @var string
      */
     public const PUBLIC_GROUP = 'Public';
+
+    /**
+     * The current user group of api view.
+     *
+     * @var string
+     */
+    public const CURRENT_USER = 'CurrentUser';
 }
