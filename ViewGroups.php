@@ -22,4 +22,11 @@ abstract class ViewGroups
      * @var string
      */
     public const DEFAULT_GROUP = 'Default';
+
+    /**
+     * The public group of api view.
+     *
+     * @var string
+     */
+    public const PUBLIC_GROUP = 'Public';
 }
