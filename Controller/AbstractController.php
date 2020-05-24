@@ -11,7 +11,7 @@
 
 namespace Klipper\Bundle\ApiBundle\Controller;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 use Klipper\Bundle\ApiBundle\View\ViewHandlerInterface;
 use Klipper\Component\Content\Downloader\DownloaderInterface;
 use Klipper\Component\Content\Uploader\UploaderInterface;
