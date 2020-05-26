@@ -149,7 +149,7 @@ class FormatSubscriber implements EventSubscriberInterface
     public function onKernelException(ExceptionEvent $event): void
     {
         $request = $event->getRequest();
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         if (!$this->matcher->matches($request)) {
             return;

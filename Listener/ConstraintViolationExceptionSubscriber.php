@@ -41,13 +41,13 @@ class ConstraintViolationExceptionSubscriber implements EventSubscriberInterface
      */
     public function onKernelException(ExceptionEvent $event): void
     {
-        $e = $event->getException();
+        $e = $event->getThrowable();
 
         if (!$e instanceof ConstraintViolationException || 0 === $e->getConstraintViolations()->count()) {
             return;
         }
 
         $message = $e->getConstraintViolations()->get(0)->getMessage();
-        $event->setException(new UnprocessableEntityHttpException($message, $e));
+        $event->setThrowable(new UnprocessableEntityHttpException($message, $e));
     }
 }
