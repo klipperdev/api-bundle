@@ -40,14 +40,14 @@ class ErrorView
      *
      * @param int             $code      The status code
      * @param string          $message   The message
-     * @param null|\Exception $exception The exception
+     * @param null|\Throwable $exception The exception
      */
-    public function __construct(int $code, string $message, ?\Exception $exception = null)
+    public function __construct(int $code, string $message, ?\Throwable $exception = null)
     {
         $this->code = $code;
         $this->message = $message;
         $this->exception = $exception && class_exists(FlattenException::class)
-            ? FlattenException::create($exception)
+            ? FlattenException::createFromThrowable($exception)
             : $exception;
     }
 }
