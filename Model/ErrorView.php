@@ -11,7 +11,7 @@
 
 namespace Klipper\Bundle\ApiBundle\Model;
 
-use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 
 /**
  * Model for error view.
