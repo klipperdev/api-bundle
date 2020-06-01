@@ -10,10 +10,6 @@
             <argument type="service" id="request_stack" />
         </service>
 
-        <service id="klipper_api.expression_language.has_scope_provider" class="Klipper\Bundle\ApiBundle\ExpressionLanguage\HasScopeProvider">
-            <tag name="security.expression_language_provider" />
-        </service>
-
         <service id="klipper_api.expression_language.version_compare_provider" class="Klipper\Bundle\ApiBundle\ExpressionLanguage\VersionCompareProvider">
             <tag name="routing.expression_language_provider" />
         </service>
