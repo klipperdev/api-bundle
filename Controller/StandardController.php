@@ -34,6 +34,7 @@ use Klipper\Component\Resource\Exception\InvalidResourceException;
 use Klipper\Component\Resource\Handler\DomainFormConfigList;
 use Klipper\Component\Resource\Handler\FormConfigInterface;
 use Klipper\Component\Resource\Handler\FormConfigListInterface;
+use Klipper\Component\Security\Permission\PermVote;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -515,7 +516,7 @@ class StandardController extends AbstractController
         $subject = null !== $id ? [$class, $id] : $class;
 
         foreach ($actions as $action) {
-            if (class_exists($class) && $this->getAuthorizationChecker()->isGranted('perm:'.$action, $subject)) {
+            if (class_exists($class) && $this->getAuthorizationChecker()->isGranted(new PermVote($action), $subject)) {
                 throw $this->createAccessDeniedException();
             }
         }
