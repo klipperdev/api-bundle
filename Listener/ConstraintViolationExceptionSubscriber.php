@@ -14,7 +14,7 @@ namespace Klipper\Bundle\ApiBundle\Listener;
 use Klipper\Component\Resource\Exception\ConstraintViolationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -48,6 +48,6 @@ class ConstraintViolationExceptionSubscriber implements EventSubscriberInterface
         }
 
         $message = $e->getConstraintViolations()->get(0)->getMessage();
-        $event->setThrowable(new UnprocessableEntityHttpException($message, $e));
+        $event->setThrowable(new BadRequestHttpException($message, $e));
     }
 }

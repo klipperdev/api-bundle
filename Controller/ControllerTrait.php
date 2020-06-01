@@ -39,7 +39,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -75,29 +74,6 @@ trait ControllerTrait
         }
 
         return new BadRequestHttpException($message, $previous);
-    }
-
-    /**
-     * Returns a UnprocessableEntityHttpException.
-     *
-     * This will result in a 422 response code. Usage example:
-     *
-     *     throw $this->createUnprocessableEntityException('Unprocessable entity!');
-     *
-     * @param string          $message  The message
-     * @param null|\Exception $previous The previous exception
-     *
-     * @final
-     */
-    protected function createUnprocessableEntityException(
-        string $message = 'Unprocessable Entity',
-        \Exception $previous = null
-    ): UnprocessableEntityHttpException {
-        if (!class_exists(UnprocessableEntityHttpException::class)) {
-            throw new \LogicException('You can not use the "createUnprocessableEntityException" method if the HTTP Kernel component is not available. Try running "composer require symfony/http-kernel".');
-        }
-
-        return new UnprocessableEntityHttpException($message, $previous);
     }
 
     /**

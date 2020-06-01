@@ -362,7 +362,7 @@ class ControllerHandler
                 }
             }
         } else {
-            $code = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $code = Response::HTTP_BAD_REQUEST;
             $data = $this->mergeAllErrors($res);
         }
 
@@ -459,7 +459,7 @@ class ControllerHandler
                 }
             }
         } else {
-            $code = Response::HTTP_UNPROCESSABLE_ENTITY;
+            $code = Response::HTTP_BAD_REQUEST;
             $data = $this->mergeAllErrors($res);
         }
 
@@ -492,7 +492,7 @@ class ControllerHandler
         $domain = $this->domainManager->get($class);
         $res = $domain->undeletes($identifiers);
         $code = $res->hasErrors()
-            ? Response::HTTP_UNPROCESSABLE_ENTITY
+            ? Response::HTTP_BAD_REQUEST
             : Response::HTTP_OK;
         $data = $this->formatResultList($res, $returnObject);
 
@@ -593,7 +593,7 @@ class ControllerHandler
      */
     public function createViewFormErrors(FormInterface $form, array $headers = []): View
     {
-        $code = Response::HTTP_UNPROCESSABLE_ENTITY;
+        $code = Response::HTTP_BAD_REQUEST;
         $data = $this->formatFormErrors($form);
 
         return View::create($data, $code, $headers);
@@ -607,7 +607,7 @@ class ControllerHandler
      */
     public function createViewConstraintErrors(ConstraintViolationException $exception, array $headers = []): View
     {
-        $code = Response::HTTP_UNPROCESSABLE_ENTITY;
+        $code = Response::HTTP_BAD_REQUEST;
         $data = $this->mergeAllConstraintErrors($exception->getConstraintViolations());
 
         return View::create($data, $code, $headers);
@@ -648,7 +648,7 @@ class ControllerHandler
                     CallableUtil::call($listener, 'onSingleError', [$res]);
                 }
 
-                $code = Response::HTTP_UNPROCESSABLE_ENTITY;
+                $code = Response::HTTP_BAD_REQUEST;
                 $data = $this->mergeAllFormErrors($res);
             }
         } catch (\Exception $e) {
@@ -694,7 +694,7 @@ class ControllerHandler
                 }
             }
 
-            $code = $res->hasErrors() ? Response::HTTP_UNPROCESSABLE_ENTITY : $code;
+            $code = $res->hasErrors() ? Response::HTTP_BAD_REQUEST : $code;
             $data = $this->formatResultList($res);
         } catch (\Exception $e) {
             throw new BadRequestHttpException($this->exceptionTranslator->transDomainException($e), $e);
@@ -746,7 +746,7 @@ class ControllerHandler
     protected function formatDataErrors(Errors $err): ResultErrors
     {
         $data = new ResultErrors(
-            $this->exceptionTranslator->trans(Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY])
+            $this->exceptionTranslator->trans(Response::$statusTexts[Response::HTTP_BAD_REQUEST])
         );
 
         foreach ($err->getErrors() as $error) {
