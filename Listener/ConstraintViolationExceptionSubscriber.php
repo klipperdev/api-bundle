@@ -29,7 +29,7 @@ class ConstraintViolationExceptionSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::EXCEPTION => [
-                ['onKernelException', -90],
+                ['onKernelException', 90],
             ],
         ];
     }
