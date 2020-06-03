@@ -21,12 +21,12 @@ class Errors
     /**
      * @var null|string[]
      */
-    protected $errors;
+    protected ?array $errors = null;
 
     /**
      * @var null|Errors[]
      */
-    protected $children;
+    protected ?array $children = null;
 
     /**
      * Get the error messages.

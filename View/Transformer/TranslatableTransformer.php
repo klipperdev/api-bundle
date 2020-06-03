@@ -19,9 +19,6 @@ use Klipper\Component\DoctrineExtensionsExtra\Util\QueryUtil;
  */
 class TranslatableTransformer implements PrePaginateViewTransformerInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function prePaginate(Query $query): void
     {
         if (false !== $query->getHint(Query::HINT_CUSTOM_OUTPUT_WALKER)) {

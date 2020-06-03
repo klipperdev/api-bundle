@@ -21,14 +21,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CheckAuthorization
 {
     /**
-     * @var string
-     *
      * @Assert\Expression(
      *     expression="null !== this.getToken()",
      *     message="oauth_access_token.token.not_blank"
      * )
      */
-    protected $token;
+    protected ?string $token = null;
 
     /**
      * Set the token.

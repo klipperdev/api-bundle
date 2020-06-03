@@ -20,14 +20,9 @@ use Klipper\Bundle\ApiBundle\Controller\Action\DeleteActionInterface;
  */
 trait DeleteTrait
 {
-    /**
-     * @var bool
-     */
-    private $returnedObject = false;
+    private bool $returnedObject = false;
 
     /**
-     * {@inheritdoc}
-     *
      * @see DeleteActionInterface::setReturnedObject()
      */
     public function setReturnedObject(bool $returnedObject): self
@@ -38,8 +33,6 @@ trait DeleteTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @see DeleteActionInterface::hasReturnedObject()
      */
     public function hasReturnedObject(): bool

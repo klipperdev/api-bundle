@@ -19,14 +19,9 @@ use Klipper\Component\Security\ObjectFilter\ObjectFilterInterface;
  */
 class ObjectFilterTransformer implements PrePaginateViewTransformerInterface, PreViewTransformerInterface
 {
-    /**
-     * @var ObjectFilterInterface
-     */
-    private $of;
+    private ObjectFilterInterface $of;
 
     /**
-     * Constructor.
-     *
      * @param ObjectFilterInterface $objectFilter The security object filter
      */
     public function __construct(ObjectFilterInterface $objectFilter)
@@ -34,17 +29,11 @@ class ObjectFilterTransformer implements PrePaginateViewTransformerInterface, Pr
         $this->of = $objectFilter;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prePaginate(Query $query): void
     {
         $this->of->beginTransaction();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function preView(array $results, int $size): array
     {
         $this->of->commit();

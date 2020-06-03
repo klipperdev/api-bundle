@@ -18,14 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class HeaderVersionResolver implements VersionResolverInterface
 {
-    /**
-     * @var string
-     */
-    private $headerName;
+    private string $headerName;
 
     /**
-     * Constructor.
-     *
      * @param string $headerName The header name
      */
     public function __construct(string $headerName)
@@ -33,9 +28,6 @@ class HeaderVersionResolver implements VersionResolverInterface
         $this->headerName = $headerName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resolve(Request $request)
     {
         if (!$request->headers->has($this->headerName)) {

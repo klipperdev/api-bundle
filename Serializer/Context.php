@@ -18,30 +18,15 @@ namespace Klipper\Bundle\ApiBundle\Serializer;
  */
 final class Context
 {
-    /**
-     * @var array
-     */
-    private $attributes = [];
+    private array $attributes = [];
 
-    /**
-     * @var null|string
-     */
-    private $version;
+    private ?string $version = null;
 
-    /**
-     * @var null|array
-     */
-    private $groups;
+    private ?array $groups = null;
 
-    /**
-     * @var bool
-     */
-    private $maxDepthChecks;
+    private ?bool $maxDepthChecks = null;
 
-    /**
-     * @var bool
-     */
-    private $serializeNull;
+    private ?bool $serializeNull = null;
 
     /**
      * Sets an attribute.

@@ -22,10 +22,7 @@ trait ActionWithObjectTrait
 {
     use ActionBuilderHandlerTrait;
 
-    /**
-     * @var null|object
-     */
-    private $object;
+    private ?object $object = null;
 
     /**
      * Set the object instance.

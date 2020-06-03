@@ -21,16 +21,13 @@ use Klipper\Component\Resource\Model\SoftDeletableInterface;
  */
 class GuessActionsMetadata implements GuessObjectConfigInterface
 {
-    private $massActions;
+    private bool $massActions;
 
     public function __construct(bool $massActions = true)
     {
         $this->massActions = $massActions;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function guessObjectConfig(ObjectMetadataBuilderInterface $metadata): void
     {
         if (false === $metadata->getBuildDefaultActions()) {

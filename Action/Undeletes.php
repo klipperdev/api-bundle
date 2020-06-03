@@ -27,12 +27,9 @@ final class Undeletes implements DeleteActionInterface
     /**
      * @var int[]|object[]|string[]
      */
-    private $identifiers;
+    private array $identifiers;
 
-    /**
-     * @var null|string
-     */
-    private $class;
+    private ?string $class;
 
     private function __construct(array $identifiers, ?string $class)
     {

@@ -26,29 +26,15 @@ class View
      */
     private $data;
 
-    /**
-     * @var null|int
-     */
-    private $statusCode;
+    private ?int $statusCode = null;
+
+    private ?string $format = null;
+
+    private ?Context $context = null;
+
+    private ?Response $response = null;
 
     /**
-     * @var null|string
-     */
-    private $format;
-
-    /**
-     * @var Context
-     */
-    private $context;
-
-    /**
-     * @var Response
-     */
-    private $response;
-
-    /**
-     * Constructor.
-     *
      * @param mixed    $data       The data
      * @param null|int $statusCode The status code
      * @param array    $headers    The response headers

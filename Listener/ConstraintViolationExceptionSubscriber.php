@@ -22,9 +22,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class ConstraintViolationExceptionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): iterable
     {
         return [

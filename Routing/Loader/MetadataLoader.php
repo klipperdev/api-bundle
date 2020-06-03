@@ -21,19 +21,11 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class MetadataLoader extends Loader
 {
-    /**
-     * @var MetadataManagerInterface
-     */
-    private $manager;
+    private MetadataManagerInterface $manager;
+
+    private string $prefix;
 
     /**
-     * @var string
-     */
-    private $prefix;
-
-    /**
-     * Constructor.
-     *
      * @param MetadataManagerInterface $manager The metadata manager
      * @param string                   $prefix  The prefix of route name
      */
@@ -43,10 +35,7 @@ class MetadataLoader extends Loader
         $this->prefix = $prefix;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function load($resource, $type = null): RouteCollection
+    public function load($resource, string $type = null): RouteCollection
     {
         $routes = new RouteCollection();
 
@@ -76,10 +65,7 @@ class MetadataLoader extends Loader
         return $routes;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function supports($resource, $type = null): bool
+    public function supports($resource, string $type = null): bool
     {
         return 'metadata' === $type;
     }

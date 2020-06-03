@@ -20,19 +20,11 @@ use Klipper\Component\Metadata\MetadataContexts;
  */
 class GuessActionOrganizationRequirements implements GuessActionConfigInterface
 {
-    /**
-     * @var string
-     */
-    private $userContextPattern;
+    private string $userContextPattern;
+
+    private string $orgContextPattern;
 
     /**
-     * @var string
-     */
-    private $orgContextPattern;
-
-    /**
-     * Constructor.
-     *
      * @param string $userContextPattern The route requirements pattern of organization parameter for user available context
      * @param string $orgContextPattern  The route requirements pattern of organization parameter for org available context
      */
@@ -44,9 +36,6 @@ class GuessActionOrganizationRequirements implements GuessActionConfigInterface
         $this->orgContextPattern = $orgContextPattern;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function guessActionConfig(ActionMetadataBuilderInterface $builder): void
     {
         $req = $builder->getRequirements();

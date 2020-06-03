@@ -19,14 +19,9 @@ use Klipper\Component\DoctrineExtensionsExtra\Filterable\RequestFilterableQuery;
  */
 class FilterableTransformer implements PrePaginateViewTransformerInterface
 {
-    /**
-     * @var RequestFilterableQuery
-     */
-    protected $helper;
+    protected RequestFilterableQuery $helper;
 
     /**
-     * Constructor.
-     *
      * @param RequestFilterableQuery $helper The request filterable query helper
      */
     public function __construct(RequestFilterableQuery $helper)
@@ -34,9 +29,6 @@ class FilterableTransformer implements PrePaginateViewTransformerInterface
         $this->helper = $helper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prePaginate(Query $query): void
     {
         $this->helper->filter($query);

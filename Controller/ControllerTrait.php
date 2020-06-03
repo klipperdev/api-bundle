@@ -61,13 +61,13 @@ trait ControllerTrait
      *     throw $this->createBadRequestException('Bad request!');
      *
      * @param string          $message  The message
-     * @param null|\Exception $previous The previous exception
+     * @param null|\Throwable $previous The previous exception
      *
      * @final
      */
     protected function createBadRequestException(
         string $message = 'Bad Request',
-        \Exception $previous = null
+        \Throwable $previous = null
     ): BadRequestHttpException {
         if (!class_exists(BadRequestHttpException::class)) {
             throw new \LogicException('You can not use the "createBadRequestException" method if the HTTP Kernel component is not available. Try running "composer require symfony/http-kernel".');
@@ -483,7 +483,7 @@ trait ControllerTrait
      *     throw $this->createAccessDeniedException('Unable to access this page!');
      *
      * @param string          $message  The message
-     * @param null|\Exception $previous The previous exception
+     * @param null|\Throwable $previous The previous exception
      *
      * @throws \LogicException If the Security component is not available
      *
@@ -491,7 +491,7 @@ trait ControllerTrait
      */
     protected function createAccessDeniedException(
         string $message = 'Access Denied.',
-        \Exception $previous = null
+        \Throwable $previous = null
     ): AccessDeniedException {
         if (!class_exists(AccessDeniedException::class)) {
             throw new \LogicException('You can not use the "createAccessDeniedException" method if the Security component is not available. Try running "composer require symfony/security-bundle".');
@@ -508,13 +508,13 @@ trait ControllerTrait
      *     throw $this->createNotFoundException('Page not found!');
      *
      * @param string          $message  The message
-     * @param null|\Exception $previous The previous exception
+     * @param null|\Throwable $previous The previous exception
      *
      * @final
      */
     protected function createNotFoundException(
         string $message = 'Not Found',
-        \Exception $previous = null
+        \Throwable $previous = null
     ): NotFoundHttpException {
         if (!class_exists(NotFoundHttpException::class)) {
             throw new \LogicException('You can not use the "createNotFoundException" method if the HTTP Kernel component is not available. Try running "composer require symfony/http-kernel".');

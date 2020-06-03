@@ -24,29 +24,15 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class VersionListener
 {
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $matcher;
+    private RequestMatcherInterface $matcher;
+
+    private ViewHandlerInterface $viewHandler;
+
+    private VersionResolverInterface $versionResolver;
+
+    private ?string $defaultVersion;
 
     /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
-
-    /**
-     * @var VersionResolverInterface
-     */
-    private $versionResolver;
-
-    /**
-     * @var null|string
-     */
-    private $defaultVersion;
-
-    /**
-     * Constructor.
-     *
      * @param RequestMatcherInterface  $matcher         The request matcher
      * @param ViewHandlerInterface     $viewHandler     The view handler
      * @param VersionResolverInterface $versionResolver The version resolver

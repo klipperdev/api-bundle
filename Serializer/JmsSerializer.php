@@ -20,19 +20,11 @@ use JMS\Serializer\SerializerInterface as JmsSerializerInterface;
  */
 class JmsSerializer implements SerializerInterface
 {
-    /**
-     * @var JmsSerializerInterface
-     */
-    private $serializer;
+    private JmsSerializerInterface $serializer;
+
+    private ?SerializationContextFactoryInterface $serializationContextFactory;
 
     /**
-     * @var null|SerializationContextFactoryInterface
-     */
-    private $serializationContextFactory;
-
-    /**
-     * Constructor.
-     *
      * @param JmsSerializerInterface                    $serializer                  The jms serializer
      * @param null|SerializationContextFactoryInterface $serializationContextFactory The jms context factory
      */
@@ -45,7 +37,7 @@ class JmsSerializer implements SerializerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $data
      */
     public function serialize($data, string $format, Context $context): string
     {

@@ -20,24 +20,13 @@ use Klipper\Component\Security\Model\RoleInterface;
  */
 class RoleObjectPermissionsTransformer implements GetViewTransformerInterface
 {
-    /**
-     * @var PermissionMetadataManagerInterface
-     */
-    private $pmManager;
+    private PermissionMetadataManagerInterface $pmManager;
+
+    private string $object;
+
+    private bool $reset;
 
     /**
-     * @var string
-     */
-    private $object;
-
-    /**
-     * @var bool
-     */
-    private $reset;
-
-    /**
-     * Constructor.
-     *
      * @param PermissionMetadataManagerInterface $pmManager The permission metadata manager
      * @param string                             $object    The object name
      * @param bool                               $reset     Check if the permission cache must be resetted
@@ -50,7 +39,7 @@ class RoleObjectPermissionsTransformer implements GetViewTransformerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
      */
     public function getView($value)
     {

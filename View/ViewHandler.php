@@ -27,53 +27,25 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ViewHandler implements ConfigurableViewHandlerInterface
 {
-    /**
-     * @var null|TokenStorageInterface
-     */
-    protected $tokenStorage;
+    protected ?TokenStorageInterface $tokenStorage;
+
+    protected ?SecurityIdentityManagerInterface $sim;
+
+    protected int $emptyContentCode;
+
+    protected bool $serializeNull;
+
+    protected ?bool $serializeNullStrategy = null;
+
+    protected ?string $exclusionStrategyVersion = null;
+
+    protected array $exclusionStrategyGroups = [];
+
+    private RequestStack $requestStack;
+
+    private SerializerInterface $serializer;
 
     /**
-     * @var null|SecurityIdentityManagerInterface
-     */
-    protected $sim;
-
-    /**
-     * @var int
-     */
-    protected $emptyContentCode;
-
-    /**
-     * @var bool
-     */
-    protected $serializeNull;
-
-    /**
-     * @var null|bool
-     */
-    protected $serializeNullStrategy;
-
-    /**
-     * @var null|string
-     */
-    protected $exclusionStrategyVersion;
-
-    /**
-     * @var array
-     */
-    protected $exclusionStrategyGroups = [];
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * Constructor.
-     *
      * @param RequestStack                          $requestStack     The request stack
      * @param SerializerInterface                   $serializer       The serializer
      * @param null|TokenStorageInterface            $tokenStorage     The token storage
@@ -97,33 +69,21 @@ class ViewHandler implements ConfigurableViewHandlerInterface
         $this->serializeNull = $serializeNull;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setSerializeNullStrategy(bool $isEnabled): void
     {
         $this->serializeNullStrategy = $isEnabled;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setExclusionStrategyVersion(string $version): void
     {
         $this->exclusionStrategyVersion = $version;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setExclusionStrategyGroups(array $groups): void
     {
         $this->exclusionStrategyGroups = $groups;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function handle(View $view, ?Request $request = null): Response
     {
         $request = $request ?? $this->requestStack->getCurrentRequest();

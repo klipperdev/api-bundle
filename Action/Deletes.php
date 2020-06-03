@@ -26,7 +26,7 @@ final class Deletes implements DeleteActionInterface
     /**
      * @var object[]
      */
-    private $objects;
+    private array $objects;
 
     private function __construct(array $objects)
     {

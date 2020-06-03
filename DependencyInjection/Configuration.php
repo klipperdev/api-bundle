@@ -23,24 +23,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
-    /**
-     * Constructor.
-     *
-     * @param bool $debug The debug mode
-     */
     public function __construct(bool $debug)
     {
         $this->debug = $debug;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('klipper_api');

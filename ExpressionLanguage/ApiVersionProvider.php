@@ -23,16 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ApiVersionProvider implements ExpressionFunctionProviderInterface
 {
-    /**
-     * @var null|Request
-     */
-    protected $request;
+    protected ?Request $request;
 
-    /**
-     * Constructor.
-     *
-     * @param RequestStack $requestStack The request stack
-     */
     public function __construct(RequestStack $requestStack)
     {
         $this->request = $requestStack->getCurrentRequest();

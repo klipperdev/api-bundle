@@ -76,44 +76,21 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  */
 class ControllerHandler
 {
-    /**
-     * @var DomainManagerInterface
-     */
-    protected $domainManager;
+    protected DomainManagerInterface $domainManager;
+
+    protected FormHandlerInterface $formHandler;
+
+    protected ExceptionTranslatorInterface $exceptionTranslator;
+
+    protected RequestStack $requestStack;
+
+    protected array $viewTransformers = [];
+
+    protected array $tempViewTransformers = [];
+
+    protected ?View $tempView = null;
 
     /**
-     * @var FormHandlerInterface
-     */
-    protected $formHandler;
-
-    /**
-     * @var ExceptionTranslatorInterface
-     */
-    protected $exceptionTranslator;
-
-    /**
-     * @var array
-     */
-    protected $viewTransformers = [];
-
-    /**
-     * @var array
-     */
-    protected $tempViewTransformers = [];
-
-    /**
-     * @var null|View
-     */
-    protected $tempView;
-
-    /**
-     * @var null|Request
-     */
-    protected $requestStack;
-
-    /**
-     * Constructor.
-     *
      * @param DomainManagerInterface       $domainManager       The domain manager
      * @param FormHandlerInterface         $formHandler         The form handler
      * @param ExceptionTranslatorInterface $exceptionTranslator The exception translator
@@ -651,8 +628,8 @@ class ControllerHandler
                 $code = Response::HTTP_BAD_REQUEST;
                 $data = $this->mergeAllFormErrors($res);
             }
-        } catch (\Exception $e) {
-            throw new BadRequestHttpException($this->exceptionTranslator->transDomainException($e), $e);
+        } catch (\Throwable $e) {
+            throw new BadRequestHttpException($this->exceptionTranslator->transDomainThrowable($e), $e);
         }
 
         return $this->getView($data, $code);
@@ -696,8 +673,8 @@ class ControllerHandler
 
             $code = $res->hasErrors() ? Response::HTTP_BAD_REQUEST : $code;
             $data = $this->formatResultList($res);
-        } catch (\Exception $e) {
-            throw new BadRequestHttpException($this->exceptionTranslator->transDomainException($e), $e);
+        } catch (\Throwable $e) {
+            throw new BadRequestHttpException($this->exceptionTranslator->transDomainThrowable($e), $e);
         }
 
         return $this->getView($data, $code);

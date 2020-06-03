@@ -28,14 +28,9 @@ class ChoiceView
      */
     public $value;
 
-    /**
-     * @var string
-     */
-    public $label;
+    public string $label;
 
     /**
-     * Constructor.
-     *
      * @param int|string $id    The id
      * @param int|string $value The view representation of the choice
      * @param string     $label The label displayed to humans

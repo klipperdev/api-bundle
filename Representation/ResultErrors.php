@@ -16,14 +16,9 @@ namespace Klipper\Bundle\ApiBundle\Representation;
  */
 final class ResultErrors extends Errors
 {
-    /**
-     * @var string
-     */
-    private $message;
+    private string $message;
 
     /**
-     * Constructor.
-     *
      * @param string $message The error message
      */
     public function __construct(string $message)

@@ -23,10 +23,7 @@ final class Delete implements DeleteActionInterface
 {
     use DeleteTrait;
 
-    /**
-     * @var null|object
-     */
-    private $object;
+    private ?object $object;
 
     private function __construct(?object $object)
     {

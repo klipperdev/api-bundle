@@ -29,10 +29,7 @@ final class Undelete implements DeleteActionInterface
      */
     private $identifier;
 
-    /**
-     * @var null|string
-     */
-    private $class;
+    private ?string $class;
 
     private function __construct($identifier, ?string $class)
     {

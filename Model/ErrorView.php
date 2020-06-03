@@ -20,34 +20,23 @@ use Symfony\Component\ErrorHandler\Exception\FlattenException;
  */
 class ErrorView
 {
-    /**
-     * @var int
-     */
-    public $code;
+    public int $code;
+
+    public string $message;
+
+    public ?\Throwable $exception;
 
     /**
-     * @var string
-     */
-    public $message;
-
-    /**
-     * @var null|\Exception
-     */
-    public $exception;
-
-    /**
-     * Constructor.
-     *
      * @param int             $code      The status code
      * @param string          $message   The message
-     * @param null|\Throwable $exception The exception
+     * @param null|\Throwable $throwable The exception
      */
-    public function __construct(int $code, string $message, ?\Throwable $exception = null)
+    public function __construct(int $code, string $message, ?\Throwable $throwable = null)
     {
         $this->code = $code;
         $this->message = $message;
-        $this->exception = $exception && class_exists(FlattenException::class)
-            ? FlattenException::createFromThrowable($exception)
-            : $exception;
+        $this->exception = $throwable && class_exists(FlattenException::class)
+            ? FlattenException::createFromThrowable($throwable)
+            : $throwable;
     }
 }

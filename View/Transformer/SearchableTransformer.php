@@ -19,14 +19,9 @@ use Klipper\Component\DoctrineExtensionsExtra\Searchable\RequestSearchableQuery;
  */
 class SearchableTransformer implements PrePaginateViewTransformerInterface
 {
-    /**
-     * @var RequestSearchableQuery
-     */
-    protected $helper;
+    protected RequestSearchableQuery $helper;
 
     /**
-     * Constructor.
-     *
      * @param RequestSearchableQuery $helper The request filterable query helper
      */
     public function __construct(RequestSearchableQuery $helper)
@@ -34,9 +29,6 @@ class SearchableTransformer implements PrePaginateViewTransformerInterface
         $this->helper = $helper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prePaginate(Query $query): void
     {
         $this->helper->filter($query);

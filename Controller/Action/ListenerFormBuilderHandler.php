@@ -32,11 +32,12 @@ use Symfony\Component\Form\FormEvents;
  */
 class ListenerFormBuilderHandler
 {
+    /**
+     * @var ActionInterface|ActionListInterface|CommonActionInterface
+     */
     private $action;
 
     /**
-     * Constructor.
-     *
      * @param ActionInterface|ActionListInterface|CommonActionInterface $action
      */
     public function __construct(CommonActionInterface $action)

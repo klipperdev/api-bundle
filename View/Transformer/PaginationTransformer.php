@@ -19,14 +19,9 @@ use Klipper\Component\DoctrineExtensionsExtra\Pagination\RequestPaginationQuery;
  */
 class PaginationTransformer implements PrePaginateViewTransformerInterface
 {
-    /**
-     * @var RequestPaginationQuery
-     */
-    protected $helper;
+    protected RequestPaginationQuery $helper;
 
     /**
-     * Constructor.
-     *
      * @param RequestPaginationQuery $helper The request pagination query helper
      */
     public function __construct(RequestPaginationQuery $helper)
@@ -34,9 +29,6 @@ class PaginationTransformer implements PrePaginateViewTransformerInterface
         $this->helper = $helper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prePaginate(Query $query): void
     {
         $this->helper->paginate($query);

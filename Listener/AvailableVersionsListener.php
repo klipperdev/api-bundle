@@ -22,19 +22,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class AvailableVersionsListener
 {
-    /**
-     * @var RequestMatcherInterface
-     */
-    protected $matcher;
+    protected RequestMatcherInterface $matcher;
+
+    protected array $availableVersions;
 
     /**
-     * @var array
-     */
-    protected $availableVersions;
-
-    /**
-     * Constructor.
-     *
      * @param RequestMatcherInterface $matcher           The request matcher
      * @param array                   $availableVersions The available versions
      */

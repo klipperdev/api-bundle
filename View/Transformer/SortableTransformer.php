@@ -19,14 +19,9 @@ use Klipper\Component\DoctrineExtensionsExtra\Sortable\RequestSortableQuery;
  */
 class SortableTransformer implements PrePaginateViewTransformerInterface
 {
-    /**
-     * @var RequestSortableQuery
-     */
-    protected $helper;
+    protected RequestSortableQuery $helper;
 
     /**
-     * Constructor.
-     *
      * @param RequestSortableQuery $helper The request sortable query helper
      */
     public function __construct(RequestSortableQuery $helper)
@@ -34,9 +29,6 @@ class SortableTransformer implements PrePaginateViewTransformerInterface
         $this->helper = $helper;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prePaginate(Query $query): void
     {
         $this->helper->sort($query);

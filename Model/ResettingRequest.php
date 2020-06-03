@@ -18,10 +18,7 @@ namespace Klipper\Bundle\ApiBundle\Model;
  */
 class ResettingRequest
 {
-    /**
-     * @var null|string
-     */
-    protected $username;
+    protected ?string $username = null;
 
     /**
      * Set the username.

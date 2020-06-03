@@ -36,9 +36,6 @@ class GuessActionMetadata implements GuessActionConfigInterface
         'undeletes' => 'guessUndeletes',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     public function guessActionConfig(ActionMetadataBuilderInterface $builder): void
     {
         $actionName = $builder->getName();

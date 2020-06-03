@@ -20,9 +20,6 @@ use Klipper\Component\Metadata\ObjectMetadataBuilderInterface;
  */
 class GuessFormObjectMetadata implements GuessObjectConfigInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function guessObjectConfig(ObjectMetadataBuilderInterface $builder): void
     {
         if (null === $builder->getFormType()) {

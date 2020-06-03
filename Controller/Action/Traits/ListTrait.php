@@ -22,19 +22,11 @@ trait ListTrait
 {
     use ActionWithClassTrait;
 
-    /**
-     * @var null|int
-     */
-    protected $limit;
+    protected ?int $limit = null;
+
+    protected ?bool $transactional = null;
 
     /**
-     * @var null|bool
-     */
-    protected $transactional;
-
-    /**
-     * {@inheritdoc}
-     *
      * @see ActionListInterface::setLimit()
      */
     public function setLimit(?int $limit): self
@@ -45,8 +37,6 @@ trait ListTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @see ActionListInterface::getLimit()
      */
     public function getLimit(): ?int
@@ -55,8 +45,6 @@ trait ListTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @see ActionListInterface::setTransactional()
      */
     public function setTransactional(?bool $transactional): self
@@ -67,8 +55,6 @@ trait ListTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @see ActionListInterface::isTransactional()
      */
     public function isTransactional(): ?bool

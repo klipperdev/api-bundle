@@ -34,44 +34,21 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class FormatSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var RequestMatcherInterface
-     */
-    private $matcher;
+    private RequestMatcherInterface $matcher;
+
+    private ViewHandlerInterface $viewHandler;
+
+    private ExceptionMessageManager $exceptionMessageManager;
+
+    private SerializerInterface $serializer;
+
+    private string $defaultTypeMime;
+
+    private bool $throwUnsupportedTypeMime;
+
+    private bool $debug;
 
     /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
-
-    /**
-     * @var ExceptionMessageManager
-     */
-    private $exceptionMessageManager;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var string
-     */
-    private $defaultTypeMime;
-
-    /**
-     * @var bool
-     */
-    private $throwUnsupportedTypeMime;
-
-    /**
-     * @var bool
-     */
-    private $debug;
-
-    /**
-     * Constructor.
-     *
      * @param RequestMatcherInterface $matcher                  The request matcher
      * @param ViewHandlerInterface    $viewHandler              The view handler
      * @param ExceptionMessageManager $exceptionMessageManager  The exception message manager
@@ -98,9 +75,6 @@ class FormatSubscriber implements EventSubscriberInterface
         $this->debug = $debug;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): iterable
     {
         return [

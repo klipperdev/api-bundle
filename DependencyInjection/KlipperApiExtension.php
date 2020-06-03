@@ -25,8 +25,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class KlipperApiExtension extends Extension
 {
     /**
-     * {@inheritdoc}
-     *
      * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
@@ -34,9 +32,7 @@ class KlipperApiExtension extends Extension
         $configuration = new Configuration($container->getParameter('kernel.debug'));
         $config = $this->processConfiguration($configuration, $configs);
 
-        $ref = new \ReflectionClass($this);
-        $configPath = \dirname($ref->getFileName(), 2).'/Resources/config';
-        $loader = new Loader\XmlFileLoader($container, new FileLocator($configPath));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('expression.xml');
         $loader->load('request_matcher.xml');
         $loader->load('handler.xml');

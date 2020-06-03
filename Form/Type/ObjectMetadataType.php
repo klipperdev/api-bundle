@@ -25,19 +25,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ObjectMetadataType extends AbstractType
 {
-    /**
-     * @var MetadataManagerInterface
-     */
-    private $metadataManager;
+    private MetadataManagerInterface $metadataManager;
 
     public function __construct(MetadataManagerInterface $metadataManager)
     {
         $this->metadataManager = $metadataManager;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $meta = $this->metadataManager->get($options['data_class']);
@@ -65,9 +59,6 @@ class ObjectMetadataType extends AbstractType
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -82,9 +73,6 @@ class ObjectMetadataType extends AbstractType
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParent(): ?string
     {
         return class_exists(TranslatableType::class) ? TranslatableType::class : parent::getParent();

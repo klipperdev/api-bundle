@@ -18,14 +18,9 @@ namespace Klipper\Bundle\ApiBundle\Controller\Action\Traits;
  */
 trait NewOptionsTrait
 {
-    /**
-     * @var array
-     */
-    private $newOptions = [];
+    private array $newOptions = [];
 
     /**
-     * {@inheritdoc}
-     *
      * @see NewOptionsInterface::setNewOptions()
      */
     public function setNewOptions(array $options): self
@@ -36,8 +31,6 @@ trait NewOptionsTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @see NewOptionsInterface::getNewOptions()
      */
     public function getNewOptions(): array

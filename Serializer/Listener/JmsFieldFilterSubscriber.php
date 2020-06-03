@@ -24,24 +24,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class JmsFieldFilterSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataManagerInterface
-     */
-    protected $metadataManager;
+    protected MetadataManagerInterface $metadataManager;
+
+    protected RequestStack $requestStack;
+
+    protected ?array $cacheFields = null;
 
     /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-
-    /**
-     * @var null|array
-     */
-    protected $cacheFields;
-
-    /**
-     * Constructor.
-     *
      * @param MetadataManagerInterface $metadataManager The metadata manager
      * @param RequestStack             $requestStack    The request stack
      */
@@ -51,9 +40,6 @@ class JmsFieldFilterSubscriber implements EventSubscriberInterface
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [

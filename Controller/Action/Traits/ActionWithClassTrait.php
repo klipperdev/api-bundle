@@ -20,10 +20,7 @@ trait ActionWithClassTrait
 {
     use ActionBuilderHandlerTrait;
 
-    /**
-     * @var string
-     */
-    private $class;
+    private string $class;
 
     /**
      * Set the object classname.

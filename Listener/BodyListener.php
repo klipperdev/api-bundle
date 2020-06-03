@@ -22,14 +22,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class BodyListener
 {
-    /**
-     * @var RequestMatcherInterface
-     */
-    protected $matcher;
+    protected RequestMatcherInterface $matcher;
 
     /**
-     * Constructor.
-     *
      * @param RequestMatcherInterface $matcher The request matcher
      */
     public function __construct(RequestMatcherInterface $matcher)

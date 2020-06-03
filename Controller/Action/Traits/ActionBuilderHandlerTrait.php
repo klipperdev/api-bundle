@@ -22,15 +22,12 @@ use Klipper\Bundle\ApiBundle\Exception\InvalidArgumentException;
  */
 trait ActionBuilderHandlerTrait
 {
-    /**
-     * @var array
-     */
-    protected $listeners = [];
+    protected array $listeners = [];
 
     /**
-     * {@inheritdoc}
-     *
      * @see ActionInterface::addListener()
+     *
+     * @param mixed $listener
      */
     public function addListener($listener, ?string $actionInterface = null): self
     {
@@ -56,8 +53,6 @@ trait ActionBuilderHandlerTrait
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @see ActionInterface::getListeners()
      */
     public function getListeners(string $interface): iterable

@@ -18,26 +18,15 @@ use Klipper\Component\Resource\ResourceListInterface;
  */
 final class ResultList
 {
-    /**
-     * @var string
-     */
-    private $status;
+    private string $status;
 
-    /**
-     * @var bool
-     */
-    private $hasErrors;
+    private bool $hasErrors;
 
     /**
      * @var null|Result[]
      */
-    private $records;
+    private ?array $records = null;
 
-    /**
-     * Constructor.
-     *
-     * @param ResourceListInterface $resourceList The resource list
-     */
     public function __construct(ResourceListInterface $resourceList)
     {
         $this->status = $resourceList->getStatus();

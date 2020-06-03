@@ -19,10 +19,7 @@ use Klipper\Component\Resource\ResourceInterface;
  */
 final class Result
 {
-    /**
-     * @var string
-     */
-    private $status;
+    private string $status;
 
     /**
      * @var null|int|string
@@ -34,14 +31,9 @@ final class Result
      */
     private $data;
 
-    /**
-     * @var null|ResultErrors
-     */
-    private $errors;
+    private ?ResultErrors $errors;
 
     /**
-     * Constructor.
-     *
      * @param ResourceInterface $resource The resource
      * @param null|array|object $data     The data
      * @param null|ResultErrors $errors   The result errors
