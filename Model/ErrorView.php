@@ -24,7 +24,10 @@ class ErrorView
 
     public string $message;
 
-    public ?\Throwable $exception;
+    /**
+     * @var null|FlattenException|\Throwable
+     */
+    public $exception;
 
     /**
      * @param int             $code      The status code
