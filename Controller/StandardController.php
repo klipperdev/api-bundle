@@ -516,7 +516,7 @@ class StandardController extends AbstractController
         $subject = null !== $id ? [$class, $id] : $class;
 
         foreach ($actions as $action) {
-            if (class_exists($class) && $this->getAuthorizationChecker()->isGranted(new PermVote($action), $subject)) {
+            if (class_exists($class) && !$this->getAuthorizationChecker()->isGranted(new PermVote($action), $subject)) {
                 throw $this->createAccessDeniedException();
             }
         }
