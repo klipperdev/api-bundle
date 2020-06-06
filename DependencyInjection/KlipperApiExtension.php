@@ -42,6 +42,7 @@ class KlipperApiExtension extends Extension
         $loader->load('format.xml');
         $loader->load('resource_listener.xml');
         $loader->load('controller.xml');
+        $loader->load('routing_api_prefix.xml');
 
         if (class_exists(KlipperMetadataBundle::class)) {
             $loader->load('view_transformer.xml');
@@ -50,10 +51,26 @@ class KlipperApiExtension extends Extension
             $loader->load('routing_metadata.xml');
         }
 
+        $this->loadRoutingApiPrefix($config, $container);
         $this->loadRequestMatcher($config, $container);
         $this->loadVersioning($config, $container);
         $this->loadViewHandler($config, $container);
         $this->loadFormat($config, $container);
+    }
+
+    /**
+     * Load the config for the api request matcher.
+     *
+     * @param array            $config    The config
+     * @param ContainerBuilder $container The container
+     */
+    private function loadRoutingApiPrefix(array $config, ContainerBuilder $container): void
+    {
+        $container->getDefinition('klipper_api.routing.pass_loader.api_prefix')
+            ->replaceArgument(0, $container->getParameterBag()->resolveValue($config['base_path']))
+            ->replaceArgument(1, $container->getParameterBag()->resolveValue($config['base_host']))
+            ->replaceArgument(2, $container->getParameterBag()->resolveValue($config['api_prefix_name_patterns']))
+        ;
     }
 
     /**

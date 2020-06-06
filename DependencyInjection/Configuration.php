@@ -40,6 +40,10 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('base_host')->defaultNull()->end()
             ->scalarNode('base_path')->defaultNull()->end()
+            ->arrayNode('api_prefix_name_patterns')
+            ->scalarPrototype()->end()
+            ->defaultValue(['*_api*'])
+            ->end()
             ->end()
         ;
 
