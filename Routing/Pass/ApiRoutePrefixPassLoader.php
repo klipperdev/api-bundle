@@ -50,7 +50,7 @@ class ApiRoutePrefixPassLoader implements PassLoaderInterface
                     $route->setHost($this->baseHost);
                 }
 
-                if (null !== $this->basePath && 0 !== strpos($route->getPath(), $this->basePath)) {
+                if (!empty($this->basePath) && 0 !== strpos($route->getPath(), $this->basePath)) {
                     $route->setPath($this->basePath.$route->getPath());
                 }
             }
