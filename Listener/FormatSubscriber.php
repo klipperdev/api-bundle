@@ -158,6 +158,7 @@ class FormatSubscriber implements EventSubscriberInterface
     protected function getFormat(Request $request): ?string
     {
         $typeMime = $request->headers->get('accept', $this->defaultTypeMime);
+        $typeMime = str_replace('*/*', $this->defaultTypeMime, $typeMime);
         $typeMimes = explode(',', $typeMime);
         $format = null;
 
