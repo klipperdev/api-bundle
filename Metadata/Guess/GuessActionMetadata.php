@@ -66,7 +66,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::listAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::listAction');
         }
     }
 
@@ -91,7 +91,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::createAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::createAction');
         }
     }
 
@@ -120,7 +120,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         ]);
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::createsAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::createsAction');
         }
     }
 
@@ -145,7 +145,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::upsertAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::upsertAction');
         }
     }
 
@@ -170,7 +170,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::upsertsAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::upsertsAction');
         }
 
         $builder->addDefaults([
@@ -199,7 +199,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::viewAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::viewAction');
         }
     }
 
@@ -224,7 +224,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::updateAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::updateAction');
         }
     }
 
@@ -249,7 +249,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::updatesAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::updatesAction');
         }
 
         $builder->addDefaults([
@@ -278,7 +278,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::deleteAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::deleteAction');
         }
     }
 
@@ -303,7 +303,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::deletesAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::deletesAction');
         }
 
         $builder->addDefaults([
@@ -332,7 +332,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::undeleteAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::undeleteAction');
         }
     }
 
@@ -357,7 +357,7 @@ class GuessActionMetadata implements GuessActionConfigInterface
         }
 
         if (null === $builder->getController()) {
-            $builder->setController('klipper_api.controller.standard::undeletesAction');
+            $builder->setController('Klipper\Bundle\ApiBundle\Controller\StandardController::undeletesAction');
         }
 
         $builder->addDefaults([

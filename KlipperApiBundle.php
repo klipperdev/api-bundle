@@ -11,6 +11,7 @@
 
 namespace Klipper\Bundle\ApiBundle;
 
+use Klipper\Bundle\ApiBundle\DependencyInjection\Compiler\ControllerViewTransformerPass;
 use Klipper\Bundle\ApiBundle\DependencyInjection\Compiler\ViewTransformerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -24,5 +25,6 @@ class KlipperApiBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new ViewTransformerPass());
+        $container->addCompilerPass(new ControllerViewTransformerPass());
     }
 }

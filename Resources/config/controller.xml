@@ -5,14 +5,17 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- View Transformer Registry for Standard Controller -->
+        <service id="klipper_api.controller_view_transformer_registry"
+                 class="Klipper\Bundle\ApiBundle\Controller\ControllerViewTransformerRegistry">
+            <argument type="collection" />
+        </service>
+
         <!-- Standard Controller -->
-        <service id="klipper_api.controller.standard"
-                 class="Klipper\Bundle\ApiBundle\Controller\StandardController"
+        <service id="Klipper\Bundle\ApiBundle\Controller\StandardController"
                  public="true">
             <tag name="controller.service_arguments" />
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
+            <argument type="service" id="klipper_api.controller_view_transformer_registry" />
         </service>
     </services>
 </container>
