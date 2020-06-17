@@ -35,6 +35,7 @@
                  class="Klipper\Bundle\ApiBundle\Controller\ControllerHelper">
             <argument type="service" id="klipper_api.controller_handler" />
             <argument type="service" id="klipper_api.view_handler" />
+            <argument type="service" id="security.authorization_checker" on-invalid="null" />
         </service>
 
         <service id="Klipper\Bundle\ApiBundle\Controller\ControllerHelper" alias="klipper_api.controller_helper" />

@@ -402,11 +402,7 @@ trait ControllerTrait
      */
     protected function isGranted($attributes, $subject = null): bool
     {
-        if (!$this->container->has('security.authorization_checker')) {
-            throw new \LogicException('The SecurityBundle is not registered in your application. Try running "composer require symfony/security-bundle".');
-        }
-
-        return $this->container->get('security.authorization_checker')->isGranted($attributes, $subject);
+        return $this->container->get('klipper_api.controller_helper')->isGranted($attributes, $subject);
     }
 
     /**
@@ -423,13 +419,7 @@ trait ControllerTrait
      */
     protected function denyAccessUnlessGranted($attributes, $subject = null, string $message = 'Access Denied.'): void
     {
-        if (!$this->isGranted($attributes, $subject)) {
-            $exception = $this->createAccessDeniedException($message);
-            $exception->setAttributes($attributes);
-            $exception->setSubject($subject);
-
-            throw $exception;
-        }
+        $this->container->get('klipper_api.controller_helper')->denyAccessUnlessGranted($attributes, $subject, $message);
     }
 
     /**

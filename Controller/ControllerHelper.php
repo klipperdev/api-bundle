@@ -33,6 +33,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -44,10 +45,16 @@ class ControllerHelper
 
     private ViewHandler $viewHandler;
 
-    public function __construct(ControllerHandler $controllerHandler, ViewHandler $viewHandler)
-    {
+    private ?AuthorizationCheckerInterface $authorizationChecker;
+
+    public function __construct(
+        ControllerHandler $controllerHandler,
+        ViewHandler $viewHandler,
+        ?AuthorizationCheckerInterface $authorizationChecker = null
+    ) {
         $this->controllerHandler = $controllerHandler;
         $this->viewHandler = $viewHandler;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -309,5 +316,46 @@ class ControllerHelper
         $view = $this->controllerHandler->views($query);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Checks if the attributes are granted against the current authentication token
+     * and optionally supplied subject.
+     *
+     * @param mixed $attribute A single attribute to vote on (can be of any type,
+     *                         string and instance of Expression are supported by the core)
+     * @param mixed $subject
+     */
+    public function isGranted($attribute, $subject = null): bool
+    {
+        if (null === $this->authorizationChecker) {
+            throw new \LogicException('The SecurityBundle is not registered in your application. Try running "composer require symfony/security-bundle".');
+        }
+
+        return $this->authorizationChecker->isGranted($attribute, $subject);
+    }
+
+    /**
+     * Throws an exception unless the attributes are granted against the current authentication token and optionally
+     * supplied subject.
+     *
+     * @param mixed  $attributes The security attributes
+     * @param mixed  $subject    The security subject
+     * @param string $message    The exception message
+     *
+     * @throws AccessDeniedException
+     */
+    public function denyAccessUnlessGranted(
+        $attributes,
+        $subject = null,
+        string $message = 'Access Denied.'
+    ): void {
+        if (!$this->isGranted($attributes, $subject)) {
+            $exception = $this->createAccessDeniedException($message);
+            $exception->setAttributes($attributes);
+            $exception->setSubject($subject);
+
+            throw $exception;
+        }
     }
 }
