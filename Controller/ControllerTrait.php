@@ -25,6 +25,7 @@ use Klipper\Bundle\ApiBundle\Action\Update;
 use Klipper\Bundle\ApiBundle\Action\Updates;
 use Klipper\Bundle\ApiBundle\Action\Upsert;
 use Klipper\Bundle\ApiBundle\Action\Upserts;
+use Klipper\Bundle\ApiBundle\Representation\ResultErrors;
 use Klipper\Bundle\ApiBundle\View\Transformer\ViewTransformerInterface;
 use Klipper\Bundle\ApiBundle\View\View;
 use Klipper\Component\Content\Downloader\DownloaderInterface;
@@ -69,11 +70,7 @@ trait ControllerTrait
         string $message = 'Bad Request',
         \Throwable $previous = null
     ): BadRequestHttpException {
-        if (!class_exists(BadRequestHttpException::class)) {
-            throw new \LogicException('You can not use the "createBadRequestException" method if the HTTP Kernel component is not available. Try running "composer require symfony/http-kernel".');
-        }
-
-        return new BadRequestHttpException($message, $previous);
+        return $this->container->get('klipper_api.controller_helper')->createBadRequestException($message, $previous);
     }
 
     /**
@@ -135,9 +132,7 @@ trait ControllerTrait
      */
     protected function createViewFormErrors(FormInterface $form, array $headers = []): View
     {
-        return $this->container->get('klipper_api.controller_handler')
-            ->createViewFormErrors($form, $headers)
-        ;
+        return $this->container->get('klipper_api.controller_helper')->createViewFormErrors($form, $headers);
     }
 
     /**
@@ -150,9 +145,7 @@ trait ControllerTrait
         ConstraintViolationException $exception,
         array $headers = []
     ): View {
-        return $this->container->get('klipper_api.controller_handler')
-            ->createViewConstraintErrors($exception, $headers)
-        ;
+        return $this->container->get('klipper_api.controller_helper')->createViewConstraintErrors($exception, $headers);
     }
 
     /**
@@ -160,9 +153,9 @@ trait ControllerTrait
      *
      * @param ResourceInterface $resource The resource
      */
-    protected function mergeAllErrors(ResourceInterface $resource): array
+    protected function mergeAllErrors(ResourceInterface $resource): ResultErrors
     {
-        return $this->container->get('klipper_api.controller_handler')->mergeAllErrors($resource);
+        return $this->container->get('klipper_api.controller_helper')->mergeAllErrors($resource);
     }
 
     /**
@@ -170,9 +163,9 @@ trait ControllerTrait
      *
      * @param ResourceInterface $resource The resource
      */
-    protected function mergeAllFormErrors(ResourceInterface $resource): array
+    protected function mergeAllFormErrors(ResourceInterface $resource): ResultErrors
     {
-        return $this->container->get('klipper_api.controller_handler')->mergeAllFormErrors($resource);
+        return $this->container->get('klipper_api.controller_helper')->mergeAllFormErrors($resource);
     }
 
     /**
@@ -197,9 +190,7 @@ trait ControllerTrait
      */
     protected function create(Create $action): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->create($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->create($action);
     }
 
     /**
@@ -209,9 +200,7 @@ trait ControllerTrait
      */
     protected function creates(Creates $action): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->creates($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->creates($action);
     }
 
     /**
@@ -221,13 +210,7 @@ trait ControllerTrait
      */
     protected function update(Update $action): Response
     {
-        if (null === $action->getObject()) {
-            throw $this->createNotFoundException();
-        }
-
-        $view = $this->container->get('klipper_api.controller_handler')->update($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->update($action);
     }
 
     /**
@@ -237,9 +220,7 @@ trait ControllerTrait
      */
     protected function updates(Updates $action): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->updates($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->updates($action);
     }
 
     /**
@@ -249,13 +230,7 @@ trait ControllerTrait
      */
     protected function upsert(Upsert $action): Response
     {
-        if (null === $action->getObject()) {
-            throw $this->createNotFoundException();
-        }
-
-        $view = $this->container->get('klipper_api.controller_handler')->upsert($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->upsert($action);
     }
 
     /**
@@ -265,9 +240,7 @@ trait ControllerTrait
      */
     protected function upserts(Upserts $action): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->upserts($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->upserts($action);
     }
 
     /**
@@ -277,13 +250,7 @@ trait ControllerTrait
      */
     protected function delete(Delete $action): Response
     {
-        if (null === $action->getObject()) {
-            throw $this->createNotFoundException();
-        }
-
-        $view = $this->container->get('klipper_api.controller_handler')->delete($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->delete($action);
     }
 
     /**
@@ -293,9 +260,7 @@ trait ControllerTrait
      */
     protected function deletes(Deletes $action): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->deletes($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->deletes($action);
     }
 
     /**
@@ -305,9 +270,7 @@ trait ControllerTrait
      */
     protected function undelete(Undelete $action): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->undelete($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->undelete($action);
     }
 
     /**
@@ -321,9 +284,7 @@ trait ControllerTrait
      */
     protected function undeletes(Undeletes $action): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->undeletes($action);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->undeletes($action);
     }
 
     /**
@@ -333,9 +294,7 @@ trait ControllerTrait
      */
     protected function view($object): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->view($object);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->view($object);
     }
 
     /**
@@ -345,9 +304,7 @@ trait ControllerTrait
      */
     protected function views($query): Response
     {
-        $view = $this->container->get('klipper_api.controller_handler')->views($query);
-
-        return $this->handleView($view);
+        return $this->container->get('klipper_api.controller_helper')->views($query);
     }
 
     /**
@@ -491,7 +448,7 @@ trait ControllerTrait
      */
     protected function createAccessDeniedException(
         string $message = 'Access Denied.',
-        \Throwable $previous = null
+        ?\Throwable $previous = null
     ): AccessDeniedException {
         if (!class_exists(AccessDeniedException::class)) {
             throw new \LogicException('You can not use the "createAccessDeniedException" method if the Security component is not available. Try running "composer require symfony/security-bundle".');
@@ -514,7 +471,7 @@ trait ControllerTrait
      */
     protected function createNotFoundException(
         string $message = 'Not Found',
-        \Throwable $previous = null
+        ?\Throwable $previous = null
     ): NotFoundHttpException {
         if (!class_exists(NotFoundHttpException::class)) {
             throw new \LogicException('You can not use the "createNotFoundException" method if the HTTP Kernel component is not available. Try running "composer require symfony/http-kernel".');
@@ -572,7 +529,7 @@ trait ControllerTrait
      * Add the view transformer.
      *
      * @param callable|ViewTransformerInterface $viewTransformer      The view transformer
-     * @param null|string                       $transformerInterface The interface of the transformer if the
+     * @param null|string                       $transformerInterface The interface of the transformer
      *
      * @return static
      *
@@ -580,7 +537,7 @@ trait ControllerTrait
      */
     protected function addViewTransformer($viewTransformer, ?string $transformerInterface = null): self
     {
-        $this->container->get('klipper_api.controller_handler')
+        $this->container->get('klipper_api.controller_helper')
             ->addViewTransformer($viewTransformer, $transformerInterface)
         ;
 
@@ -596,7 +553,7 @@ trait ControllerTrait
      */
     protected function setView(View $view): View
     {
-        return $this->container->get('klipper_api.controller_handler')->setView($view);
+        return $this->container->get('klipper_api.controller_helper')->setView($view);
     }
 
     /**
@@ -621,7 +578,7 @@ trait ControllerTrait
      */
     protected function handleView(View $view): Response
     {
-        return $this->container->get('klipper_api.view_handler')->handle($view);
+        return $this->container->get('klipper_api.controller_helper')->handleView($view);
     }
 
     /**

@@ -49,6 +49,7 @@ class AbstractController implements ServiceSubscriberInterface
     public static function getSubscribedServices(): array
     {
         return [
+            'klipper_api.controller_helper' => '?'.ControllerHelper::class,
             'klipper_api.controller_handler' => '?'.ControllerHandler::class,
             'klipper_api.view_handler' => '?'.ViewHandlerInterface::class,
             'klipper_api.expression_language.repository' => '?'.ExpressionLanguage::class,
@@ -156,6 +157,16 @@ class AbstractController implements ServiceSubscriberInterface
     protected function isBasicAuthentication(): bool
     {
         return $this->getService('klipper_security_extra.authentication_helper')->isBasicAuthentication();
+    }
+
+    /**
+     * Gets the controller helper.
+     *
+     * @final
+     */
+    protected function getControllerHelper(): ControllerHelper
+    {
+        return $this->getService('klipper_api.controller_helper');
     }
 
     /**

@@ -29,5 +29,14 @@
 
         <service id="Klipper\Bundle\ApiBundle\View\ViewHandler" alias="klipper_api.view_handler" />
         <service id="Klipper\Bundle\ApiBundle\View\ViewHandlerInterface" alias="klipper_api.view_handler" />
+
+        <!-- Controller Helper -->
+        <service id="klipper_api.controller_helper"
+                 class="Klipper\Bundle\ApiBundle\Controller\ControllerHelper">
+            <argument type="service" id="klipper_api.controller_handler" />
+            <argument type="service" id="klipper_api.view_handler" />
+        </service>
+
+        <service id="Klipper\Bundle\ApiBundle\Controller\ControllerHelper" alias="klipper_api.controller_helper" />
     </services>
 </container>
