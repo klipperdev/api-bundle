@@ -13,6 +13,7 @@ namespace Klipper\Bundle\ApiBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ObjectRepository;
 use Klipper\Bundle\ApiBundle\Action\Create;
 use Klipper\Bundle\ApiBundle\Action\Creates;
 use Klipper\Bundle\ApiBundle\Action\Delete;
@@ -27,6 +28,8 @@ use Klipper\Bundle\ApiBundle\Representation\ResultErrors;
 use Klipper\Bundle\ApiBundle\View\Transformer\ViewTransformerInterface;
 use Klipper\Bundle\ApiBundle\View\View;
 use Klipper\Bundle\ApiBundle\View\ViewHandler;
+use Klipper\Component\DoctrineExtensionsExtra\Representation\PaginationInterface;
+use Klipper\Component\Resource\Domain\DomainInterface;
 use Klipper\Component\Resource\Exception\ConstraintViolationException;
 use Klipper\Component\Resource\ResourceInterface;
 use Symfony\Component\Form\FormInterface;
@@ -35,6 +38,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
@@ -58,6 +62,38 @@ class ControllerHelper
     }
 
     /**
+     * Check if the class is managed by the object manager.
+     */
+    public function hasDomain(string $class): bool
+    {
+        return $this->controllerHandler->hasDomain($class);
+    }
+
+    /**
+     * Get the domain for the managed class by the object manager.
+     */
+    public function getDomain(string $class): DomainInterface
+    {
+        return $this->controllerHandler->getDomain($class);
+    }
+
+    /**
+     * Create an instance of the managed class by the object manager.
+     */
+    public function newInstance(string $class, array $options = []): object
+    {
+        return $this->controllerHandler->newInstance($class, $options);
+    }
+
+    /**
+     * Get the object repository of the managed class by the object manager.
+     */
+    public function getRepository(string $class): ObjectRepository
+    {
+        return $this->controllerHandler->getRepository($class);
+    }
+
+    /**
      * Set the view.
      */
     public function setView(View $view): View
@@ -73,6 +109,14 @@ class ControllerHelper
     public function createView($data = null, ?int $statusCode = null, array $headers = []): View
     {
         return $this->setView(View::create($data, $statusCode, $headers));
+    }
+
+    /**
+     * Reset the non permanent view transformers.
+     */
+    public function resetViewTransformers(): void
+    {
+        $this->controllerHandler->reset();
     }
 
     /**
@@ -127,13 +171,27 @@ class ControllerHelper
     }
 
     /**
+     * Merge all constraint errors in resource.
+     */
+    public function mergeAllConstraintErrors(ConstraintViolationListInterface $constraintErrors): ResultErrors
+    {
+        return $this->controllerHandler->mergeAllConstraintErrors($constraintErrors);
+    }
+
+    /**
      * Merge all constraint errors in form errors.
-     *
-     * @param ResourceInterface $resource The resource
      */
     public function mergeAllFormErrors(ResourceInterface $resource): ResultErrors
     {
         return $this->controllerHandler->mergeAllFormErrors($resource);
+    }
+
+    /**
+     * Format the response for form errors.
+     */
+    public function formatFormErrors(FormInterface $form): ResultErrors
+    {
+        return $this->controllerHandler->formatFormErrors($form);
     }
 
     /**
@@ -316,6 +374,32 @@ class ControllerHelper
         $view = $this->controllerHandler->views($query);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Paginate doctrine orm query.
+     *
+     * @param Query|QueryBuilder $query The doctrine orm query
+     */
+    public function paginate($query): PaginationInterface
+    {
+        return $this->controllerHandler->paginate($query);
+    }
+
+    /**
+     * Check if the request requires to force the delete for the soft deletable entities.
+     */
+    public function isForceDelete(): bool
+    {
+        return $this->controllerHandler->isForceDelete();
+    }
+
+    /**
+     * Check if the request requires the transactional mode for the batches.
+     */
+    public function isTransactional(): bool
+    {
+        return $this->controllerHandler->isTransactional();
     }
 
     /**

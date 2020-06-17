@@ -14,6 +14,7 @@ namespace Klipper\Bundle\ApiBundle\Controller;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ObjectRepository;
 use Klipper\Bundle\ApiBundle\Action\Create;
 use Klipper\Bundle\ApiBundle\Action\Creates;
 use Klipper\Bundle\ApiBundle\Action\Delete;
@@ -51,6 +52,7 @@ use Klipper\Component\DoctrineExtensionsExtra\Representation\Pagination;
 use Klipper\Component\DoctrineExtensionsExtra\Representation\PaginationInterface;
 use Klipper\Component\DoctrineExtra\Util\ClassUtils;
 use Klipper\Component\HttpFoundation\Util\RequestUtil;
+use Klipper\Component\Resource\Domain\DomainInterface;
 use Klipper\Component\Resource\Domain\DomainManagerInterface;
 use Klipper\Component\Resource\Exception\ConstraintViolationException;
 use Klipper\Component\Resource\Handler\DomainFormConfigList;
@@ -588,6 +590,38 @@ class ControllerHandler
         $data = $this->mergeAllConstraintErrors($exception->getConstraintViolations());
 
         return View::create($data, $code, $headers);
+    }
+
+    /**
+     * Check if the class is managed by the object manager.
+     */
+    public function hasDomain(string $class): bool
+    {
+        return $this->domainManager->has($class);
+    }
+
+    /**
+     * Get the domain for the managed class by the object manager.
+     */
+    public function getDomain(string $class): DomainInterface
+    {
+        return $this->domainManager->get($class);
+    }
+
+    /**
+     * Create an instance of the managed class by the object manager.
+     */
+    public function newInstance(string $class, array $options = []): object
+    {
+        return $this->getDomain($class)->newInstance($options);
+    }
+
+    /**
+     * Get the object repository of the managed class by the object manager.
+     */
+    public function getRepository(string $class): ObjectRepository
+    {
+        return $this->getDomain($class)->getRepository();
     }
 
     /**
