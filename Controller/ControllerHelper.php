@@ -31,6 +31,8 @@ use Klipper\Bundle\ApiBundle\View\ViewHandler;
 use Klipper\Component\DoctrineExtensionsExtra\Representation\PaginationInterface;
 use Klipper\Component\Resource\Domain\DomainInterface;
 use Klipper\Component\Resource\Exception\ConstraintViolationException;
+use Klipper\Component\Resource\Handler\FormConfigInterface;
+use Klipper\Component\Resource\Handler\FormConfigListInterface;
 use Klipper\Component\Resource\ResourceInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -384,6 +386,44 @@ class ControllerHelper
     public function paginate($query): PaginationInterface
     {
         return $this->controllerHandler->paginate($query);
+    }
+
+    /**
+     * Process form for one object instance (create and submit form).
+     *
+     * @param array|object $object The object instance
+     */
+    public function processForm(FormConfigInterface $config, $object): FormInterface
+    {
+        return $this->controllerHandler->processForm($config, $object);
+    }
+
+    /**
+     * Process form for one object instance (create and submit form).
+     *
+     * @param array[]|object[] $objects The list of object instance
+     *
+     * @return FormInterface[]
+     */
+    public function processForms(FormConfigListInterface $config, array $objects = []): array
+    {
+        return $this->controllerHandler->processForms($config, $objects);
+    }
+
+    /**
+     * Get the default limit. If the value is null, then there is not limit of quantity of rows.
+     */
+    public function getFormDefaultLimit(): ?int
+    {
+        return $this->controllerHandler->getFormDefaultLimit();
+    }
+
+    /**
+     * Get the max limit. If the value is null, then there is not limit of quantity of rows.
+     */
+    public function getFormMaxLimit(): ?int
+    {
+        return $this->controllerHandler->getFormMaxLimit();
     }
 
     /**

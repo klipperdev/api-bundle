@@ -56,6 +56,8 @@ use Klipper\Component\Resource\Domain\DomainInterface;
 use Klipper\Component\Resource\Domain\DomainManagerInterface;
 use Klipper\Component\Resource\Exception\ConstraintViolationException;
 use Klipper\Component\Resource\Handler\DomainFormConfigList;
+use Klipper\Component\Resource\Handler\FormConfigInterface;
+use Klipper\Component\Resource\Handler\FormConfigListInterface;
 use Klipper\Component\Resource\Handler\FormHandlerInterface;
 use Klipper\Component\Resource\Model\SoftDeletableInterface;
 use Klipper\Component\Resource\ResourceInterface;
@@ -622,6 +624,44 @@ class ControllerHandler
     public function getRepository(string $class): ObjectRepository
     {
         return $this->getDomain($class)->getRepository();
+    }
+
+    /**
+     * Process form for one object instance (create and submit form).
+     *
+     * @param array|object $object The object instance
+     */
+    public function processForm(FormConfigInterface $config, $object): FormInterface
+    {
+        return $this->formHandler->processForm($config, $object);
+    }
+
+    /**
+     * Process form for one object instance (create and submit form).
+     *
+     * @param array[]|object[] $objects The list of object instance
+     *
+     * @return FormInterface[]
+     */
+    public function processForms(FormConfigListInterface $config, array $objects = []): array
+    {
+        return $this->formHandler->processForms($config, $objects);
+    }
+
+    /**
+     * Get the default limit. If the value is null, then there is not limit of quantity of rows.
+     */
+    public function getFormDefaultLimit(): ?int
+    {
+        return $this->formHandler->getDefaultLimit();
+    }
+
+    /**
+     * Get the max limit. If the value is null, then there is not limit of quantity of rows.
+     */
+    public function getFormMaxLimit(): ?int
+    {
+        return $this->formHandler->getMaxLimit();
     }
 
     /**
