@@ -37,30 +37,33 @@ class GuessActionsMetadata implements GuessObjectConfigInterface
         $undeletable = interface_exists(SoftDeletableInterface::class)
             && is_a($metadata->getClass(), SoftDeletableInterface::class, true);
 
-        $metadata
-            ->addAction(new ActionMetadataBuilder('list'))
-            ->addAction(new ActionMetadataBuilder('create'))
-            ->addAction(new ActionMetadataBuilder('upsert'))
-            ->addAction(new ActionMetadataBuilder('view'))
-            ->addAction(new ActionMetadataBuilder('update'))
-            ->addAction(new ActionMetadataBuilder('delete'))
-        ;
+        $this->addAction($metadata, 'list');
+        $this->addAction($metadata, 'create');
+        $this->addAction($metadata, 'upsert');
+        $this->addAction($metadata, 'view');
+        $this->addAction($metadata, 'update');
+        $this->addAction($metadata, 'delete');
 
         if ($undeletable) {
-            $metadata->addAction(new ActionMetadataBuilder('undelete'));
+            $this->addAction($metadata, 'undelete');
         }
 
         if ($this->massActions) {
-            $metadata
-                ->addAction(new ActionMetadataBuilder('creates'))
-                ->addAction(new ActionMetadataBuilder('upserts'))
-                ->addAction(new ActionMetadataBuilder('updates'))
-                ->addAction(new ActionMetadataBuilder('deletes'))
-            ;
+            $this->addAction($metadata, 'creates');
+            $this->addAction($metadata, 'upserts');
+            $this->addAction($metadata, 'updates');
+            $this->addAction($metadata, 'deletes');
 
             if ($undeletable) {
-                $metadata->addAction(new ActionMetadataBuilder('undeletes'));
+                $this->addAction($metadata, 'undeletes');
             }
+        }
+    }
+
+    private function addAction(ObjectMetadataBuilderInterface $metadata, string $name): void
+    {
+        if (!\in_array($name, $metadata->getExcludedDefaultActions(), true)) {
+            $metadata->addAction(new ActionMetadataBuilder($name));
         }
     }
 }
