@@ -547,7 +547,7 @@ class ControllerHandler
         /** @var ConstraintViolation $err */
         foreach ($resource->getErrors() as $err) {
             $error = new FormError($err->getMessage(), $err->getMessageTemplate(), $err->getParameters(), $err->getPlural(), $err->getInvalidValue());
-            $form = $resource->getData()->has($err->getPropertyPath())
+            $form = $err->getPropertyPath() && $resource->getData()->has($err->getPropertyPath())
                 ? $resource->getData()->get($err->getPropertyPath())
                 : $resource->getData();
             $form->addError($error);
