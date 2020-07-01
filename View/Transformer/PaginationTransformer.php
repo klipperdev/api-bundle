@@ -21,16 +21,19 @@ class PaginationTransformer implements PrePaginateViewTransformerInterface
 {
     protected RequestPaginationQuery $helper;
 
+    protected bool $fetchJoinCollection;
+
     /**
      * @param RequestPaginationQuery $helper The request pagination query helper
      */
-    public function __construct(RequestPaginationQuery $helper)
+    public function __construct(RequestPaginationQuery $helper, bool $fetchJoinCollection = false)
     {
         $this->helper = $helper;
+        $this->fetchJoinCollection = $fetchJoinCollection;
     }
 
     public function prePaginate(Query $query): void
     {
-        $this->helper->paginate($query);
+        $this->helper->paginate($query, $this->fetchJoinCollection);
     }
 }

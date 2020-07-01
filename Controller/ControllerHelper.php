@@ -383,9 +383,9 @@ class ControllerHelper
      *
      * @param Query|QueryBuilder $query The doctrine orm query
      */
-    public function paginate($query): PaginationInterface
+    public function paginate($query, bool $fetchJoinCollection = false): PaginationInterface
     {
-        return $this->controllerHandler->paginate($query);
+        return $this->controllerHandler->paginate($query, $fetchJoinCollection);
     }
 
     /**

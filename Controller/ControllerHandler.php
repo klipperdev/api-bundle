@@ -177,7 +177,7 @@ class ControllerHandler
      *
      * @param Query|QueryBuilder $query The doctrine orm query
      */
-    public function paginate($query): PaginationInterface
+    public function paginate($query, bool $fetchJoinCollection = false): PaginationInterface
     {
         if ($query instanceof QueryBuilder) {
             $query = $query->getQuery();
@@ -187,9 +187,9 @@ class ControllerHandler
             CallableUtil::call($transformer, 'prePaginate', [$query]);
         }
 
-        $paginator = new Paginator($query);
-        $results = $paginator->getIterator()->getArrayCopy();
+        $paginator = new Paginator($query, $fetchJoinCollection);
         $size = $paginator->count();
+        $results = $paginator->getIterator()->getArrayCopy();
 
         foreach ($this->getViewTransformers(PreViewTransformerInterface::class) as $transformer) {
             $results = CallableUtil::call($transformer, 'preView', [$results, $size]);
@@ -227,9 +227,9 @@ class ControllerHandler
      *
      * @param Query|QueryBuilder $query The doctrine orm query
      */
-    public function views($query): View
+    public function views($query, bool $fetchJoinCollection = false): View
     {
-        return $this->getView($this->paginate($query));
+        return $this->getView($this->paginate($query, $fetchJoinCollection));
     }
 
     /**
