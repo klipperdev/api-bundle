@@ -124,7 +124,7 @@ class JmsFieldFilterSubscriber implements EventSubscriberInterface
                 $fields = array_map('trim', explode(',', $requestFields));
 
                 foreach ($fields as $field) {
-                    $exp = array_map('trim', explode('#', $field));
+                    $exp = array_map('trim', explode('.', $field));
 
                     if (2 === \count($exp)) {
                         $this->cacheFields[$exp[0]][$exp[1]] = true;
