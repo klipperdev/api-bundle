@@ -82,7 +82,7 @@ class FormatSubscriber implements EventSubscriberInterface
                 ['onKernelRequest', 1024],
             ],
             KernelEvents::EXCEPTION => [
-                ['onKernelException', 0],
+                ['onKernelException', 10],
             ],
         ];
     }
