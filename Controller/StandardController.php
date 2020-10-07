@@ -26,6 +26,7 @@ use Klipper\Bundle\ApiBundle\Exception\InvalidArgumentException;
 use Klipper\Bundle\ApiBundle\View\View;
 use Klipper\Bundle\DoctrineExtensionsExtraBundle\Request\ParamConverter\DoctrineParamConverterExpressionLanguage;
 use Klipper\Component\DoctrineExtensionsExtra\Entity\Repository\Traits\TranslatableRepositoryInterface;
+use Klipper\Component\HttpFoundation\Util\RequestUtil;
 use Klipper\Component\Metadata\ActionMetadataInterface;
 use Klipper\Component\Metadata\MetadataManagerInterface;
 use Klipper\Component\Metadata\ObjectMetadataInterface;
@@ -529,7 +530,12 @@ class StandardController
         } else {
             $defaultMet = $repo instanceof TranslatableRepositoryInterface ? 'findOneTranslatedById' : 'findOneById';
             $method = $request->attributes->get('_repository_method', $defaultMet);
-            $object = $repo->{$method}($id);
+
+            if ($repo instanceof TranslatableRepositoryInterface) {
+                $object = $repo->{$method}($id, RequestUtil::getLanguage($request));
+            } else {
+                $object = $repo->{$method}($id);
+            }
         }
 
         if (null === $object) {
