@@ -67,7 +67,10 @@ class StandardController
         $class = $request->attributes->get('_action_class');
         $repo = $helper->getRepository($class);
         $meta = $metadataManager->get($class);
-        $method = $request->attributes->get('_method_repository', 'createQueryBuilder');
+        $defaultRepoMethod = method_exists($repo, 'createTranslatedQueryBuilder')
+            ? 'createTranslatedQueryBuilder'
+            : 'createQueryBuilder';
+        $method = $request->attributes->get('_method_repository', $defaultRepoMethod);
         $alias = $request->attributes->get('_method_repository_alias', 'o');
         $indexBy = $request->attributes->get('_method_repository_index_by');
         $querySortable = $request->headers->has('x-sort')
