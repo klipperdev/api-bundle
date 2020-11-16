@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -42,6 +43,8 @@ class FormatSubscriber implements EventSubscriberInterface
 
     private SerializerInterface $serializer;
 
+    private ErrorListener $errorListener;
+
     private string $defaultTypeMime;
 
     private bool $throwUnsupportedTypeMime;
@@ -53,6 +56,7 @@ class FormatSubscriber implements EventSubscriberInterface
      * @param ViewHandlerInterface    $viewHandler              The view handler
      * @param ExceptionMessageManager $exceptionMessageManager  The exception message manager
      * @param SerializerInterface     $serializer               The serializer
+     * @param ErrorListener           $errorListener            The http kernel error listener to log the exception
      * @param string                  $defaultTypeMime          The default type mime
      * @param bool                    $throwUnsupportedTypeMime Check if an exception must be thrown if type mime is not supported
      * @param bool                    $debug                    The debug mode
@@ -62,6 +66,7 @@ class FormatSubscriber implements EventSubscriberInterface
         ViewHandlerInterface $viewHandler,
         ExceptionMessageManager $exceptionMessageManager,
         SerializerInterface $serializer,
+        ErrorListener $errorListener,
         string $defaultTypeMime,
         bool $throwUnsupportedTypeMime,
         bool $debug = false
@@ -70,6 +75,7 @@ class FormatSubscriber implements EventSubscriberInterface
         $this->viewHandler = $viewHandler;
         $this->exceptionMessageManager = $exceptionMessageManager;
         $this->serializer = $serializer;
+        $this->errorListener = $errorListener;
         $this->defaultTypeMime = $defaultTypeMime;
         $this->throwUnsupportedTypeMime = $throwUnsupportedTypeMime;
         $this->debug = $debug;
@@ -82,7 +88,7 @@ class FormatSubscriber implements EventSubscriberInterface
                 ['onKernelRequest', 1024],
             ],
             KernelEvents::EXCEPTION => [
-                ['onKernelException', 10],
+                ['onKernelException', -127],
             ],
         ];
     }
@@ -128,6 +134,8 @@ class FormatSubscriber implements EventSubscriberInterface
         if (!$this->matcher->matches($request)) {
             return;
         }
+
+        $this->errorListener->logKernelException($event);
 
         if ($exception instanceof HttpException) {
             $code = $exception->getStatusCode();

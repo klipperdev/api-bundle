@@ -150,9 +150,9 @@ class KlipperApiExtension extends Extension
     private function loadFormat(array $config, ContainerBuilder $container): void
     {
         $container->getDefinition('klipper_api.listener.format_subscriber')
-            ->replaceArgument(4, $config['format']['default_type_mime'])
-            ->replaceArgument(5, $config['format']['throw_unsupported_type_mime'])
-            ->replaceArgument(6, $config['format']['debug'])
+            ->replaceArgument(5, $config['format']['default_type_mime'])
+            ->replaceArgument(6, $config['format']['throw_unsupported_type_mime'])
+            ->replaceArgument(7, $config['format']['debug'])
         ;
     }
 }

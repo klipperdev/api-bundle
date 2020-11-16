@@ -69,7 +69,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -674,36 +673,32 @@ class ControllerHandler
     {
         $domain = $this->domainManager->get($action->getClass());
 
-        try {
-            $newOptions = $action instanceof NewOptionsInterface ? $action->getNewOptions() : [];
-            $object = $action instanceof Update || $action instanceof Upsert ? $action->getObject() : null;
-            $object = \is_object($object) ? $object : $domain->newInstance($newOptions);
+        $newOptions = $action instanceof NewOptionsInterface ? $action->getNewOptions() : [];
+        $object = $action instanceof Update || $action instanceof Upsert ? $action->getObject() : null;
+        $object = \is_object($object) ? $object : $domain->newInstance($newOptions);
 
-            $form = $this->formHandler->processForm($action, $object);
-            $actionMethod = lcfirst(substr(strrchr(\get_class($action), '\\'), 1));
-            /** @var ResourceInterface $res */
-            $res = $domain->{$actionMethod}($form);
+        $form = $this->formHandler->processForm($action, $object);
+        $actionMethod = lcfirst(substr(strrchr(\get_class($action), '\\'), 1));
+        /** @var ResourceInterface $res */
+        $res = $domain->{$actionMethod}($form);
 
-            if ($res->isValid()) {
-                foreach ($action->getListeners(SuccessActionListenerInterface::class) as $listener) {
-                    CallableUtil::call($listener, 'onSingleSuccess', [$res]);
-                }
-
-                $data = $res->getRealData();
-
-                foreach ($this->getViewTransformers(GetViewTransformerInterface::class) as $transformer) {
-                    $data = CallableUtil::call($transformer, 'getView', [$data]);
-                }
-            } else {
-                foreach ($action->getListeners(ErrorActionListenerInterface::class) as $listener) {
-                    CallableUtil::call($listener, 'onSingleError', [$res]);
-                }
-
-                $code = Response::HTTP_BAD_REQUEST;
-                $data = $this->mergeAllFormErrors($res);
+        if ($res->isValid()) {
+            foreach ($action->getListeners(SuccessActionListenerInterface::class) as $listener) {
+                CallableUtil::call($listener, 'onSingleSuccess', [$res]);
             }
-        } catch (\Throwable $e) {
-            throw new BadRequestHttpException($this->exceptionTranslator->transDomainThrowable($e), $e);
+
+            $data = $res->getRealData();
+
+            foreach ($this->getViewTransformers(GetViewTransformerInterface::class) as $transformer) {
+                $data = CallableUtil::call($transformer, 'getView', [$data]);
+            }
+        } else {
+            foreach ($action->getListeners(ErrorActionListenerInterface::class) as $listener) {
+                CallableUtil::call($listener, 'onSingleError', [$res]);
+            }
+
+            $code = Response::HTTP_BAD_REQUEST;
+            $data = $this->mergeAllFormErrors($res);
         }
 
         return $this->getView($data, $code);
@@ -729,27 +724,23 @@ class ControllerHandler
         $config->setCreation($action instanceof Creates);
         $config->setIdentifier(current($domain->getObjectManager()->getClassMetadata($class)->getIdentifier()));
 
-        try {
-            $forms = $this->formHandler->processForms($config);
-            $actionMethod = lcfirst(substr(strrchr(\get_class($action), '\\'), 1));
-            /** @var ResourceListInterface $res */
-            $res = $domain->{$actionMethod}($forms, !$config->isTransactional());
+        $forms = $this->formHandler->processForms($config);
+        $actionMethod = lcfirst(substr(strrchr(\get_class($action), '\\'), 1));
+        /** @var ResourceListInterface $res */
+        $res = $domain->{$actionMethod}($forms, !$config->isTransactional());
 
-            if (!$res->hasErrors()) {
-                foreach ($action->getListeners(SuccessListActionListenerInterface::class) as $listener) {
-                    CallableUtil::call($listener, 'onListSuccess', [$res]);
-                }
-            } else {
-                foreach ($action->getListeners(ErrorListActionListenerInterface::class) as $listener) {
-                    CallableUtil::call($listener, 'onListError', [$res]);
-                }
+        if (!$res->hasErrors()) {
+            foreach ($action->getListeners(SuccessListActionListenerInterface::class) as $listener) {
+                CallableUtil::call($listener, 'onListSuccess', [$res]);
             }
-
-            $code = $res->hasErrors() ? Response::HTTP_BAD_REQUEST : $code;
-            $data = $this->formatResultList($res);
-        } catch (\Throwable $e) {
-            throw new BadRequestHttpException($this->exceptionTranslator->transDomainThrowable($e), $e);
+        } else {
+            foreach ($action->getListeners(ErrorListActionListenerInterface::class) as $listener) {
+                CallableUtil::call($listener, 'onListError', [$res]);
+            }
         }
+
+        $code = $res->hasErrors() ? Response::HTTP_BAD_REQUEST : $code;
+        $data = $this->formatResultList($res);
 
         return $this->getView($data, $code);
     }

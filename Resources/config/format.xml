@@ -13,6 +13,7 @@
             <argument type="service" id="klipper_api.view_handler" />
             <argument type="service" id="klipper_translation.exception_message_manager" />
             <argument type="service" id="klipper_api.serializer" />
+            <argument type="service" id="exception_listener" />
             <argument /> <!-- default type mime -->
             <argument /> <!-- throw unsupported type mime -->
             <argument /> <!-- debug mode -->
