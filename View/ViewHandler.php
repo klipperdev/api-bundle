@@ -35,6 +35,8 @@ class ViewHandler implements ConfigurableViewHandlerInterface
 
     protected bool $serializeNull;
 
+    protected bool $maxDepthChecks = false;
+
     protected ?bool $serializeNullStrategy = null;
 
     protected ?string $exclusionStrategyVersion = null;
@@ -72,6 +74,11 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     public function setSerializeNullStrategy(bool $isEnabled): void
     {
         $this->serializeNullStrategy = $isEnabled;
+    }
+
+    public function setMaxDepthChecks(bool $maxDepthChecks): void
+    {
+        $this->maxDepthChecks = $maxDepthChecks;
     }
 
     public function setExclusionStrategyVersion(string $version): void
@@ -161,6 +168,10 @@ class ViewHandler implements ConfigurableViewHandlerInterface
     protected function getSerializationContext(View $view): Context
     {
         $context = $view->getContext();
+
+        if ($this->maxDepthChecks) {
+            $context->enableMaxDepthChecks();
+        }
 
         if (null !== $this->serializeNullStrategy && null === $context->getSerializeNull()) {
             $context->setSerializeNull($this->serializeNullStrategy);

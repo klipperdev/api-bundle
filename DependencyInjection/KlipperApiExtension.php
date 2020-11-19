@@ -130,6 +130,7 @@ class KlipperApiExtension extends Extension
             ->replaceArgument(4, $config['view']['empty_content'])
             ->replaceArgument(5, $config['view']['serialize_null'])
             ->addMethodCall('setSerializeNullStrategy', [$config['serializer']['serialize_null']])
+            ->addMethodCall('setMaxDepthChecks', [$config['serializer']['max_depth_checks']])
         ;
 
         if (!empty($config['serializer']['version'])) {

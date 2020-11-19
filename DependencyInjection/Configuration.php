@@ -118,6 +118,7 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
             ->booleanNode('serialize_null')->defaultFalse()->end()
+            ->booleanNode('max_depth_checks')->defaultTrue()->end()
             ->scalarNode('version')->defaultNull()->end()
             ->arrayNode('groups')
             ->prototype('scalar')->end()

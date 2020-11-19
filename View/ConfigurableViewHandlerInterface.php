@@ -22,6 +22,11 @@ interface ConfigurableViewHandlerInterface extends ViewHandlerInterface
     public function setSerializeNullStrategy(bool $isEnabled): void;
 
     /**
+     * Set the default max depth checks.
+     */
+    public function setMaxDepthChecks(bool $maxDepthChecks): void;
+
+    /**
      * Set the default serialization version.
      */
     public function setExclusionStrategyVersion(string $version): void;
