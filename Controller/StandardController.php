@@ -577,11 +577,9 @@ class StandardController
 
     protected function addGroups(Request $request, array $groups): void
     {
-        $request->attributes->set('_view_groups', array_unique(
-            array_merge(
+        $request->attributes->set('_view_groups', array_unique(array_merge(
             $groups,
             $request->attributes->get('_view_groups', [])
-        ),
-        ));
+        )));
     }
 }
