@@ -76,6 +76,7 @@ class StandardController
         $querySortable = $request->headers->has('x-sort')
             ? $request->headers->get('x-sort')
             : $request->query->get('sort');
+        $this->addGroups($request, ['Views']);
         $this->defineView($request, $helper);
         $this->checkSecurity($request, $helper, 'view');
 
@@ -103,6 +104,7 @@ class StandardController
         $meta = $metadataManager->get($request->attributes->get('_action_class'));
         $actionMeta = $meta->getAction($request->attributes->get('_action'));
         $action = Create::build($this->getFormType($meta), $meta->getClass());
+        $this->addGroups($request, ['View', 'Create']);
         $this->defineControllerAction($request, $helper, $meta, $actionMeta, $action);
         $this->checkSecurity($request, $helper, 'create');
 
@@ -120,6 +122,7 @@ class StandardController
         $meta = $metadataManager->get($request->attributes->get('_action_class'));
         $actionMeta = $meta->getAction($request->attributes->get('_action'));
         $action = Creates::build($this->getFormType($meta), $meta->getClass());
+        $this->addGroups($request, ['Views', 'Creates']);
         $this->defineControllerActionList($request, $helper, $meta, $actionMeta, $action);
         $this->checkSecurity($request, $helper, 'create');
 
@@ -141,6 +144,7 @@ class StandardController
         $actionMeta = $meta->getAction($request->attributes->get('_action'));
         $value = $this->getObjectOrClass($request, $helper, $converterRegistry, $expressionLanguage, $meta);
         $action = Upsert::build($this->getFormType($meta), $value);
+        $this->addGroups($request, ['View', 'Create', 'Update']);
         $this->defineControllerAction($request, $helper, $meta, $actionMeta, $action);
         $this->checkSecurity($request, $helper, \is_object($value) ? 'update' : 'create');
 
@@ -159,6 +163,7 @@ class StandardController
         $meta = $metadataManager->get($request->attributes->get('_action_class'));
         $actionMeta = $meta->getAction($request->attributes->get('_action'));
         $action = Upserts::build($this->getFormType($meta), $meta->getClass());
+        $this->addGroups($request, ['Views', 'Creates', 'Updates']);
         $this->defineControllerActionList($request, $helper, $meta, $actionMeta, $action);
         $this->checkSecurity($request, $helper, ['create', 'update']);
 
@@ -203,6 +208,7 @@ class StandardController
         $object = $this->getObject($request, $helper, $expressionLanguage, $helper->getDomain($class), $id);
 
         $action = Update::build($this->getFormType($meta), $object);
+        $this->addGroups($request, ['View', 'Update']);
         $this->defineControllerAction($request, $helper, $meta, $actionMeta, $action);
         $this->checkSecurity($request, $helper, 'update', $id);
 
@@ -220,6 +226,7 @@ class StandardController
         $meta = $metadataManager->get($request->attributes->get('_action_class'));
         $actionMeta = $meta->getAction($request->attributes->get('_action'));
         $action = Updates::build($this->getFormType($meta), $meta->getClass());
+        $this->addGroups($request, ['Views', 'Updates']);
         $this->defineControllerActionList($request, $helper, $meta, $actionMeta, $action);
         $this->checkSecurity($request, $helper, 'update');
 
@@ -280,6 +287,7 @@ class StandardController
     ): Response {
         $class = $request->attributes->get('_action_class');
         $object = $this->getObject($request, $helper, $expressionLanguage, $helper->getDomain($class), $id);
+        $this->addGroups($request, ['View', 'Undelete']);
         $this->defineView($request, $helper);
         $this->checkSecurity($request, $helper, 'undelete', $id);
 
@@ -302,6 +310,7 @@ class StandardController
         $config = $this->getFormConfigList($request, $helper, $metadataManager);
         $dataList = $this->getDataList($request, $translator, $converterRegistry, $config);
         $action = Undeletes::build($dataList);
+        $this->addGroups($request, ['Views', 'Undeletes']);
         $action->setReturnedObject($request->attributes->getBoolean('_action_returned_object'));
         $this->checkSecurity($request, $helper, 'undelete');
 
