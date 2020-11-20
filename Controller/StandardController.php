@@ -178,6 +178,7 @@ class StandardController
     ): Response {
         $class = $request->attributes->get('_action_class');
         $object = $this->getObject($request, $helper, $expressionLanguage, $helper->getDomain($class), $id);
+        $this->addGroups($request, ['View']);
         $this->defineView($request, $helper);
         $this->checkSecurity($request, $helper, 'view', $id);
 
@@ -563,5 +564,15 @@ class StandardController
                 throw $helper->createAccessDeniedException();
             }
         }
+    }
+
+    protected function addGroups(Request $request, array $groups): void
+    {
+        $request->attributes->set('_view_groups', array_unique(
+            array_merge(
+            $groups,
+            $request->attributes->get('_view_groups', [])
+        ),
+        ));
     }
 }
