@@ -66,29 +66,15 @@ class StandardController
     ): Response {
         $class = $request->attributes->get('_action_class');
         $repo = $helper->getRepository($class);
-        $meta = $metadataManager->get($class);
         $defaultRepoMethod = method_exists($repo, 'createTranslatedQueryBuilder')
             ? 'createTranslatedQueryBuilder'
             : 'createQueryBuilder';
         $method = $request->attributes->get('_method_repository', $defaultRepoMethod);
         $alias = $request->attributes->get('_method_repository_alias', 'o');
         $indexBy = $request->attributes->get('_method_repository_index_by');
-        $querySortable = $request->headers->has('x-sort')
-            ? $request->headers->get('x-sort')
-            : $request->query->get('sort');
         $this->addGroups($request, ['Views']);
         $this->defineView($request, $helper);
         $this->checkSecurity($request, $helper, 'view');
-
-        if (empty($querySortable) && !empty($meta->getDefaultSortable())) {
-            $sort = [];
-
-            foreach ($meta->getDefaultSortable() as $field => $direction) {
-                $sort[] = $field.':'.$direction;
-            }
-
-            $request->headers->set('x-sort', implode(', ', $sort));
-        }
 
         return $helper->views($repo->{$method}($alias, $indexBy));
     }
