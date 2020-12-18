@@ -61,8 +61,7 @@ class StandardController
      */
     public function listAction(
         Request $request,
-        ControllerHelper $helper,
-        MetadataManagerInterface $metadataManager
+        ControllerHelper $helper
     ): Response {
         $class = $request->attributes->get('_action_class');
         $repo = $helper->getRepository($class);
