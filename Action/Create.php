@@ -25,8 +25,8 @@ use Klipper\Component\Resource\Handler\FormConfig;
  */
 final class Create extends FormConfig implements ActionInterface, NewOptionsInterface
 {
-    use NewOptionsTrait;
     use ActionWithClassTrait;
+    use NewOptionsTrait;
 
     private function __construct(string $formType, string $class)
     {
