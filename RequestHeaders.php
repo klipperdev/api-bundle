@@ -29,4 +29,11 @@ abstract class RequestHeaders
      * @var string
      */
     public const TRANSACTIONAL = 'X-Transactional';
+
+    /**
+     * The details for views.
+     *
+     * @var string
+     */
+    public const VIEWS_DETAILS = 'X-Views-Details';
 }

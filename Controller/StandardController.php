@@ -23,7 +23,10 @@ use Klipper\Bundle\ApiBundle\Action\Upsert;
 use Klipper\Bundle\ApiBundle\Action\Upserts;
 use Klipper\Bundle\ApiBundle\Controller\Action\ActionListInterface;
 use Klipper\Bundle\ApiBundle\Exception\InvalidArgumentException;
+use Klipper\Bundle\ApiBundle\RequestHeaders;
+use Klipper\Bundle\ApiBundle\Util\RequestHeaderUtil;
 use Klipper\Bundle\ApiBundle\View\View;
+use Klipper\Bundle\ApiBundle\ViewGroups;
 use Klipper\Bundle\DoctrineExtensionsExtraBundle\Request\ParamConverter\DoctrineParamConverterExpressionLanguage;
 use Klipper\Component\DoctrineExtensionsExtra\Entity\Repository\Traits\TranslatableRepositoryInterface;
 use Klipper\Component\HttpFoundation\Util\RequestUtil;
@@ -562,9 +565,18 @@ class StandardController
 
     protected function addGroups(Request $request, array $groups): void
     {
-        $request->attributes->set('_view_groups', array_unique(array_merge(
+        $groups = array_unique(array_merge(
             $groups,
             $request->attributes->get('_view_groups', [])
-        )));
+        ));
+
+        if (\in_array('Views', $groups, true)
+            && !\in_array(ViewGroups::VIEWS_DETAILS, $groups, true)
+            && RequestHeaderUtil::getBoolean($request, RequestHeaders::VIEWS_DETAILS)
+        ) {
+            $groups[] = ViewGroups::VIEWS_DETAILS;
+        }
+
+        $request->attributes->set('_view_groups', $groups);
     }
 }

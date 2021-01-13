@@ -31,6 +31,13 @@ abstract class ViewGroups
     public const PUBLIC_GROUP = 'Public';
 
     /**
+     * The details for views.
+     *
+     * @var string
+     */
+    public const VIEWS_DETAILS = 'ViewsDetails';
+
+    /**
      * The current user group of api view.
      *
      * @var string
