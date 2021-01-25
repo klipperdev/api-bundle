@@ -386,7 +386,7 @@ class StandardController
     protected function getLimit(Request $request, ControllerHelper $helper): ?int
     {
         $max = $helper->getFormMaxLimit();
-        $limit = $request->attributes->getInt('_request_limit', $helper->getFormDefaultLimit());
+        $limit = $request->attributes->getInt('_request_limit', (int) $helper->getFormDefaultLimit());
         $limit = null !== $limit && null !== $max ? min($max, $limit) : $limit;
 
         return null !== $limit ? max(1, $limit) : $limit;
