@@ -14,6 +14,8 @@ namespace Klipper\Bundle\ApiBundle\Action;
 use Klipper\Bundle\ApiBundle\Controller\Action\ActionInterface;
 use Klipper\Bundle\ApiBundle\Controller\Action\ListenerFormBuilderHandler;
 use Klipper\Bundle\ApiBundle\Controller\Action\Traits\ActionWithObjectTrait;
+use Klipper\Bundle\ApiBundle\Controller\Action\Traits\ProcessFormInterface;
+use Klipper\Bundle\ApiBundle\Controller\Action\Traits\ProcessFormTrait;
 use Klipper\Component\Resource\Handler\FormConfig;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,9 +24,10 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author François Pluchino <francois.pluchino@klipper.dev>
  */
-final class Update extends FormConfig implements ActionInterface
+final class Update extends FormConfig implements ActionInterface, ProcessFormInterface
 {
     use ActionWithObjectTrait;
+    use ProcessFormTrait;
 
     private function __construct(string $formType, ?object $object)
     {

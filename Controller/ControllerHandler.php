@@ -32,6 +32,7 @@ use Klipper\Bundle\ApiBundle\Controller\Action\Listener\ErrorListActionListenerI
 use Klipper\Bundle\ApiBundle\Controller\Action\Listener\SuccessActionListenerInterface;
 use Klipper\Bundle\ApiBundle\Controller\Action\Listener\SuccessListActionListenerInterface;
 use Klipper\Bundle\ApiBundle\Controller\Action\Traits\NewOptionsInterface;
+use Klipper\Bundle\ApiBundle\Controller\Action\Traits\ProcessFormInterface;
 use Klipper\Bundle\ApiBundle\Exception\InvalidArgumentException;
 use Klipper\Bundle\ApiBundle\Representation\Errors;
 use Klipper\Bundle\ApiBundle\Representation\Result;
@@ -677,8 +678,10 @@ class ControllerHandler
         $object = $action instanceof Update || $action instanceof Upsert ? $action->getObject() : null;
         $object = \is_object($object) ? $object : $domain->newInstance($newOptions);
 
-        $form = $this->formHandler->processForm($action, $object);
         $actionMethod = lcfirst(substr(strrchr(\get_class($action), '\\'), 1));
+        $form = !$action instanceof ProcessFormInterface || $action->isProcessForm()
+            ? $this->formHandler->processForm($action, $object)
+            : $object;
         /** @var ResourceInterface $res */
         $res = $domain->{$actionMethod}($form);
 
@@ -698,7 +701,7 @@ class ControllerHandler
             }
 
             $code = Response::HTTP_BAD_REQUEST;
-            $data = $this->mergeAllFormErrors($res);
+            $data = $res->isForm() ? $this->mergeAllFormErrors($res) : $this->mergeAllErrors($res);
         }
 
         return $this->getView($data, $code);
@@ -769,7 +772,7 @@ class ControllerHandler
             }
 
             if (!$result->isValid()) {
-                $resultErrors = $this->mergeAllFormErrors($result);
+                $resultErrors = $result->isForm() ? $this->mergeAllFormErrors($result) : $this->mergeAllErrors($result);
             }
 
             if ($addRecords || !$result->isValid()) {

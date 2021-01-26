@@ -16,6 +16,8 @@ use Klipper\Bundle\ApiBundle\Controller\Action\ListenerFormBuilderHandler;
 use Klipper\Bundle\ApiBundle\Controller\Action\Traits\ActionWithClassTrait;
 use Klipper\Bundle\ApiBundle\Controller\Action\Traits\NewOptionsInterface;
 use Klipper\Bundle\ApiBundle\Controller\Action\Traits\NewOptionsTrait;
+use Klipper\Bundle\ApiBundle\Controller\Action\Traits\ProcessFormInterface;
+use Klipper\Bundle\ApiBundle\Controller\Action\Traits\ProcessFormTrait;
 use Klipper\Component\Resource\Handler\FormConfig;
 
 /**
@@ -23,10 +25,11 @@ use Klipper\Component\Resource\Handler\FormConfig;
  *
  * @author François Pluchino <francois.pluchino@klipper.dev>
  */
-final class Create extends FormConfig implements ActionInterface, NewOptionsInterface
+final class Create extends FormConfig implements ActionInterface, ProcessFormInterface, NewOptionsInterface
 {
     use ActionWithClassTrait;
     use NewOptionsTrait;
+    use ProcessFormTrait;
 
     private function __construct(string $formType, string $class)
     {
