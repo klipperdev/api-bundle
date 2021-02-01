@@ -758,6 +758,12 @@ class ControllerHandler
     {
         $resultList = new ResultList($resourceList);
 
+        if ($resourceList->hasErrors()) {
+            $resultList->setMessage($this->exceptionTranslator->trans(
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST]
+            ));
+        }
+
         foreach ($resourceList->all() as $result) {
             $realData = $result->getRealData();
             $resultData = null;

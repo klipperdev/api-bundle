@@ -22,15 +22,18 @@ final class ResultList
 
     private bool $hasErrors;
 
+    private ?string $message;
+
     /**
      * @var null|Result[]
      */
     private ?array $records = null;
 
-    public function __construct(ResourceListInterface $resourceList)
+    public function __construct(ResourceListInterface $resourceList, ?string $message = null)
     {
         $this->status = $resourceList->getStatus();
         $this->hasErrors = $resourceList->hasErrors();
+        $this->message = $message;
     }
 
     /**
@@ -65,6 +68,13 @@ final class ResultList
     public function addRecord(Result $record): self
     {
         $this->records[] = $record;
+
+        return $this;
+    }
+
+    public function setMessage(?string $message): self
+    {
+        $this->message = $message;
 
         return $this;
     }
