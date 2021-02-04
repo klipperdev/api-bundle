@@ -12,6 +12,7 @@
 namespace Klipper\Bundle\ApiBundle;
 
 use Klipper\Bundle\ApiBundle\DependencyInjection\Compiler\ControllerViewTransformerPass;
+use Klipper\Bundle\ApiBundle\DependencyInjection\Compiler\FilePathUploadListenerConfigPass;
 use Klipper\Bundle\ApiBundle\DependencyInjection\Compiler\ImagePathUploadListenerConfigPass;
 use Klipper\Bundle\ApiBundle\DependencyInjection\Compiler\ViewTransformerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,5 +29,6 @@ class KlipperApiBundle extends Bundle
         $container->addCompilerPass(new ViewTransformerPass());
         $container->addCompilerPass(new ControllerViewTransformerPass());
         $container->addCompilerPass(new ImagePathUploadListenerConfigPass());
+        $container->addCompilerPass(new FilePathUploadListenerConfigPass());
     }
 }

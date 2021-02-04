@@ -13,5 +13,13 @@
             <argument type="service" id="klipper_content.image_manipulator.cache" on-invalid="null" />
             <argument type="service" id="filesystem" on-invalid="null" />
         </service>
+
+        <service id="klipper_api.listener.file_path_upload_subscriber"
+                 class="Klipper\Bundle\ApiBundle\Listener\FilePathUploadSubscriber"
+                 public="false">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="klipper_resource.domain_manager" />
+            <argument type="service" id="filesystem" on-invalid="null" />
+        </service>
     </services>
 </container>
