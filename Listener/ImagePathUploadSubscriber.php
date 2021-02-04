@@ -11,16 +11,13 @@
 
 namespace Klipper\Bundle\ApiBundle\Listener;
 
-use Klipper\Bundle\ApiBundle\Uploader\ImagePathUploadListenerConfigInterface;
-use Klipper\Component\Content\ImageManipulator\Cache\CacheInterface;
+use Klipper\Component\Content\ContentManagerInterface;
 use Klipper\Component\Content\Uploader\Event\UploadFileCompletedEvent;
-use Klipper\Component\Content\Util\ContentUtil;
 use Klipper\Component\DoctrineExtra\Util\ClassUtils;
 use Klipper\Component\Resource\Domain\DomainManagerInterface;
 use Klipper\Component\Resource\Exception\ConstraintViolationException;
 use Klipper\Contracts\Model\ImagePathInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
@@ -29,20 +26,14 @@ class ImagePathUploadSubscriber implements EventSubscriberInterface
 {
     private DomainManagerInterface $domainManager;
 
-    private ?CacheInterface $imageManipulatorCache;
-
-    private Filesystem $fs;
-
-    private array $configs = [];
+    private ContentManagerInterface $contentManager;
 
     public function __construct(
         DomainManagerInterface $domainManager,
-        ?CacheInterface $imageManipulatorCache = null,
-        ?Filesystem $fs = null
+        ContentManagerInterface $contentManager
     ) {
         $this->domainManager = $domainManager;
-        $this->imageManipulatorCache = $imageManipulatorCache;
-        $this->fs = $fs ?? new Filesystem();
+        $this->contentManager = $contentManager;
     }
 
     public static function getSubscribedEvents(): iterable
@@ -54,65 +45,41 @@ class ImagePathUploadSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function addImagePathUploadListenerConfig(ImagePathUploadListenerConfigInterface $config): void
-    {
-        $this->configs[] = $config;
-    }
-
     /**
      * @throws
      */
     public function onUploadRequest(UploadFileCompletedEvent $event): void
     {
-        foreach ($this->configs as $config) {
-            if ($this->doOnUploadRequest($event, $config)) {
-                break;
-            }
-        }
-    }
-
-    /**
-     * @throws
-     */
-    public function doOnUploadRequest(
-        UploadFileCompletedEvent $event,
-        ImagePathUploadListenerConfigInterface $config
-    ): bool {
         $file = $event->getFile()->getPathname();
         $payload = $event->getPayload();
+        $uploaderName = $this->contentManager->getUploaderName($event->getPayload());
 
-        if (!\is_object($payload) || !$payload instanceof ImagePathInterface
-                || $config->getUploaderName() !== $event->getConfig()->getName()
-                || !$config->validateEvent($event)) {
-            return false;
+        if (!\is_object($payload)
+            || !$payload instanceof ImagePathInterface
+            || null === $uploaderName
+        ) {
+            return;
         }
 
         $previousFile = $payload->getImagePath();
-        $payload->setImagePath(ContentUtil::getRelativePath($this->fs, $event->getConfig(), $file));
-        $res = $this->domainManager->get(ClassUtils::getClass($payload))->update($payload);
+        $payload->setImagePath($this->contentManager->buildRelativePath($uploaderName, $file));
 
-        if (!$res->isValid()) {
-            $this->fs->remove($file);
+        if ($this->domainManager->has(ClassUtils::getClass($payload))) {
+            $res = $this->domainManager->get(ClassUtils::getClass($payload))->upsert($payload);
 
-            throw new ConstraintViolationException($res->getErrors());
-        }
+            if (!$res->isValid()) {
+                $this->contentManager->remove($uploaderName, $payload->getImagePath());
 
-        try {
-            $this->fs->remove(ContentUtil::getAbsolutePath($event->getConfig(), $previousFile));
-        } catch (\Throwable $e) {
-            // no check to optimize request to delete file, so do nothing on error
-        }
-
-        try {
-            if (null !== $this->imageManipulatorCache) {
-                $this->imageManipulatorCache->clear(
-                    ContentUtil::getAbsolutePath($event->getConfig(), $previousFile)
-                );
+                throw new ConstraintViolationException($res->getErrors());
             }
-        } catch (\Throwable $e) {
-            // no check to optimize request to delete file, so do nothing on error
         }
 
-        return true;
+        if (null !== $previousFile) {
+            try {
+                $this->contentManager->remove($uploaderName, $previousFile);
+            } catch (\Throwable $e) {
+                // no check to optimize request to delete file, so do nothing on error
+            }
+        }
     }
 }
