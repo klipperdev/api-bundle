@@ -12,74 +12,26 @@
 namespace Klipper\Bundle\ApiBundle\Listener;
 
 use Klipper\Component\Content\ContentManagerInterface;
-use Klipper\Component\Content\Uploader\Event\UploadFileCompletedEvent;
-use Klipper\Component\DoctrineExtra\Util\ClassUtils;
 use Klipper\Component\Resource\Domain\DomainManagerInterface;
-use Klipper\Component\Resource\Exception\ConstraintViolationException;
 use Klipper\Contracts\Model\ImagePathInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
  */
-class ImagePathUploadSubscriber implements EventSubscriberInterface
+class ImagePathUploadSubscriber extends ContentPathUploadSubscriber
 {
-    private DomainManagerInterface $domainManager;
-
-    private ContentManagerInterface $contentManager;
-
     public function __construct(
         DomainManagerInterface $domainManager,
-        ContentManagerInterface $contentManager
+        ContentManagerInterface $contentManager,
+        PropertyAccessor $accessor = null
     ) {
-        $this->domainManager = $domainManager;
-        $this->contentManager = $contentManager;
-    }
-
-    public static function getSubscribedEvents(): iterable
-    {
-        return [
-            UploadFileCompletedEvent::class => [
-                ['onUploadRequest', 0],
-            ],
-        ];
-    }
-
-    /**
-     * @throws
-     */
-    public function onUploadRequest(UploadFileCompletedEvent $event): void
-    {
-        $file = $event->getFile()->getPathname();
-        $payload = $event->getPayload();
-        $uploaderName = $this->contentManager->getUploaderName($event->getPayload());
-
-        if (!\is_object($payload)
-            || !$payload instanceof ImagePathInterface
-            || null === $uploaderName
-        ) {
-            return;
-        }
-
-        $previousFile = $payload->getImagePath();
-        $payload->setImagePath($this->contentManager->buildRelativePath($uploaderName, $file));
-
-        if ($this->domainManager->has(ClassUtils::getClass($payload))) {
-            $res = $this->domainManager->get(ClassUtils::getClass($payload))->upsert($payload);
-
-            if (!$res->isValid()) {
-                $this->contentManager->remove($uploaderName, $payload->getImagePath());
-
-                throw new ConstraintViolationException($res->getErrors());
-            }
-        }
-
-        if (null !== $previousFile) {
-            try {
-                $this->contentManager->remove($uploaderName, $previousFile);
-            } catch (\Throwable $e) {
-                // no check to optimize request to delete file, so do nothing on error
-            }
-        }
+        parent::__construct(
+            $domainManager,
+            $contentManager,
+            ImagePathInterface::class,
+            'imagePath',
+            $accessor
+        );
     }
 }
