@@ -13,7 +13,6 @@ namespace Klipper\Bundle\ApiBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ObjectRepository;
 use Klipper\Bundle\ApiBundle\Action\Create;
 use Klipper\Bundle\ApiBundle\Action\Creates;
@@ -48,7 +47,6 @@ use Klipper\Bundle\ApiBundle\View\Transformer\PreViewTransformerInterface;
 use Klipper\Bundle\ApiBundle\View\Transformer\ViewTransformerInterface;
 use Klipper\Bundle\ApiBundle\View\View;
 use Klipper\Component\DoctrineExtensionsExtra\Model\Traits\TranslatableInterface;
-use Klipper\Component\DoctrineExtensionsExtra\Pagination\RequestPaginationQuery;
 use Klipper\Component\DoctrineExtensionsExtra\Representation\Pagination;
 use Klipper\Component\DoctrineExtensionsExtra\Representation\PaginationInterface;
 use Klipper\Component\DoctrineExtra\Util\ClassUtils;
@@ -187,9 +185,9 @@ class ControllerHandler
             CallableUtil::call($transformer, 'prePaginate', [$query]);
         }
 
-        $paginator = new Paginator($query, $fetchJoinCollection);
-        $size = $paginator->count();
-        $results = $paginator->getIterator()->getArrayCopy();
+        $pagination = Pagination::fromQuery($query, $fetchJoinCollection);
+        $results = $pagination->getResults();
+        $size = $pagination->getTotal();
 
         foreach ($this->getViewTransformers(PreViewTransformerInterface::class) as $transformer) {
             $results = CallableUtil::call($transformer, 'preView', [$results, $size]);
@@ -205,13 +203,7 @@ class ControllerHandler
             $results = CallableUtil::call($transformer, 'postView', [$results, $size]);
         }
 
-        $pagination = new Pagination(
-            $results,
-            (int) $query->getHint(RequestPaginationQuery::HINT_PAGE_NUMBER),
-            $query->getMaxResults(),
-            (int) ceil($size / $query->getMaxResults()),
-            $size
-        );
+        $pagination->setResults($results);
 
         foreach ($this->getViewTransformers(PostPaginateViewTransformerInterface::class) as $transformer) {
             $pagination = CallableUtil::call($transformer, 'postPaginate', [$pagination]);
