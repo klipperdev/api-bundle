@@ -25,6 +25,7 @@ use Klipper\Bundle\ApiBundle\Action\Updates;
 use Klipper\Bundle\ApiBundle\Action\Upsert;
 use Klipper\Bundle\ApiBundle\Action\Upserts;
 use Klipper\Bundle\ApiBundle\Representation\ResultErrors;
+use Klipper\Bundle\ApiBundle\Representation\ResultList;
 use Klipper\Bundle\ApiBundle\View\Transformer\ViewTransformerInterface;
 use Klipper\Bundle\ApiBundle\View\View;
 use Klipper\Bundle\ApiBundle\View\ViewHandler;
@@ -34,6 +35,7 @@ use Klipper\Component\Resource\Exception\ConstraintViolationException;
 use Klipper\Component\Resource\Handler\FormConfigInterface;
 use Klipper\Component\Resource\Handler\FormConfigListInterface;
 use Klipper\Component\Resource\ResourceInterface;
+use Klipper\Component\Resource\ResourceListInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -194,6 +196,17 @@ class ControllerHelper
     public function formatFormErrors(FormInterface $form): ResultErrors
     {
         return $this->controllerHandler->formatFormErrors($form);
+    }
+
+    /**
+     * Format the resource list.
+     *
+     * @param ResourceListInterface $resourceList The resource list
+     * @param bool                  $addRecords   Check if the records must be included
+     */
+    public function formatResultList(ResourceListInterface $resourceList, bool $addRecords = true): ResultList
+    {
+        return $this->controllerHandler->formatResultList($resourceList, $addRecords);
     }
 
     /**

@@ -559,6 +559,47 @@ class ControllerHandler
     }
 
     /**
+     * Format the resource list.
+     *
+     * @param ResourceListInterface $resourceList The resource list
+     * @param bool                  $addRecords   Check if the records must be included
+     */
+    public function formatResultList(ResourceListInterface $resourceList, bool $addRecords = true): ResultList
+    {
+        $resultList = new ResultList($resourceList);
+
+        if ($resourceList->hasErrors()) {
+            $resultList->setMessage($this->exceptionTranslator->trans(
+                Response::$statusTexts[Response::HTTP_BAD_REQUEST]
+            ));
+        }
+
+        foreach ($resourceList->all() as $result) {
+            $realData = $result->getRealData();
+            $resultData = null;
+            $resultErrors = null;
+
+            if ($addRecords) {
+                $resultData = $realData;
+
+                foreach ($this->getViewTransformers(GetViewTransformerInterface::class) as $transformer) {
+                    $resultData = CallableUtil::call($transformer, 'getView', [$resultData]);
+                }
+            }
+
+            if (!$result->isValid()) {
+                $resultErrors = $result->isForm() ? $this->mergeAllFormErrors($result) : $this->mergeAllErrors($result);
+            }
+
+            if ($addRecords || !$result->isValid()) {
+                $resultList->addRecord(new Result($result, $resultData, $resultErrors));
+            }
+        }
+
+        return $resultList;
+    }
+
+    /**
      * Create the view for invalid form.
      *
      * @param FormInterface $form    The invalid form
@@ -738,47 +779,6 @@ class ControllerHandler
         $data = $this->formatResultList($res);
 
         return $this->getView($data, $code);
-    }
-
-    /**
-     * Format the resource list.
-     *
-     * @param ResourceListInterface $resourceList The resource list
-     * @param bool                  $addRecords   Check if the records must be included
-     */
-    protected function formatResultList(ResourceListInterface $resourceList, bool $addRecords = true): ResultList
-    {
-        $resultList = new ResultList($resourceList);
-
-        if ($resourceList->hasErrors()) {
-            $resultList->setMessage($this->exceptionTranslator->trans(
-                Response::$statusTexts[Response::HTTP_BAD_REQUEST]
-            ));
-        }
-
-        foreach ($resourceList->all() as $result) {
-            $realData = $result->getRealData();
-            $resultData = null;
-            $resultErrors = null;
-
-            if ($addRecords) {
-                $resultData = $realData;
-
-                foreach ($this->getViewTransformers(GetViewTransformerInterface::class) as $transformer) {
-                    $resultData = CallableUtil::call($transformer, 'getView', [$resultData]);
-                }
-            }
-
-            if (!$result->isValid()) {
-                $resultErrors = $result->isForm() ? $this->mergeAllFormErrors($result) : $this->mergeAllErrors($result);
-            }
-
-            if ($addRecords || !$result->isValid()) {
-                $resultList->addRecord(new Result($result, $resultData, $resultErrors));
-            }
-        }
-
-        return $resultList;
     }
 
     /**
