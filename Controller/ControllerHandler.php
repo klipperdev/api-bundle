@@ -13,7 +13,6 @@ namespace Klipper\Bundle\ApiBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ObjectRepository;
 use Klipper\Bundle\ApiBundle\Action\Create;
 use Klipper\Bundle\ApiBundle\Action\Creates;
@@ -182,15 +181,11 @@ class ControllerHandler
             $query = $query->getQuery();
         }
 
-        // Force count before pre paginate view transformers to skip the bug between Translation Walker and group by
-        $totalPaginator = new Paginator($query, false);
-        $total = $totalPaginator->count();
-
         foreach ($this->getViewTransformers(PrePaginateViewTransformerInterface::class) as $transformer) {
             CallableUtil::call($transformer, 'prePaginate', [$query]);
         }
 
-        $pagination = Pagination::fromQuery($query, $fetchJoinCollection, null, $total);
+        $pagination = Pagination::fromQuery($query, $fetchJoinCollection);
         $results = $pagination->getResults();
         $size = $pagination->getTotal();
 
