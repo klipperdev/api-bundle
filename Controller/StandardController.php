@@ -25,6 +25,7 @@ use Klipper\Bundle\ApiBundle\Controller\Action\ActionListInterface;
 use Klipper\Bundle\ApiBundle\Exception\InvalidArgumentException;
 use Klipper\Bundle\ApiBundle\RequestHeaders;
 use Klipper\Bundle\ApiBundle\Util\RequestHeaderUtil;
+use Klipper\Bundle\ApiBundle\Util\StandardControllerUtil;
 use Klipper\Bundle\ApiBundle\View\View;
 use Klipper\Bundle\ApiBundle\ViewGroups;
 use Klipper\Bundle\DoctrineExtensionsExtraBundle\Request\ParamConverter\DoctrineParamConverterExpressionLanguage;
@@ -68,9 +69,7 @@ class StandardController
     ): Response {
         $class = $request->attributes->get('_action_class');
         $repo = $helper->getRepository($class);
-        $defaultRepoMethod = method_exists($repo, 'createTranslatedQueryBuilder')
-            ? 'createTranslatedQueryBuilder'
-            : 'createQueryBuilder';
+        $defaultRepoMethod = StandardControllerUtil::findDefaultCreateQueryBuilderMethod($repo);
         $method = $request->attributes->get('_repository_method', $defaultRepoMethod);
         $alias = $request->attributes->get('_repository_method_alias', 'o');
         $indexBy = $request->attributes->get('_repository_method_index_by');
