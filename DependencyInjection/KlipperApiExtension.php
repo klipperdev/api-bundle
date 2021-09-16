@@ -12,7 +12,6 @@
 namespace Klipper\Bundle\ApiBundle\DependencyInjection;
 
 use Klipper\Bundle\MetadataBundle\KlipperMetadataBundle;
-use Klipper\Component\Content\Uploader\Uploader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -49,10 +48,6 @@ class KlipperApiExtension extends Extension
             $loader->load('serializer_metadata.xml');
             $loader->load('form_metadata.xml');
             $loader->load('routing_metadata.xml');
-        }
-
-        if (class_exists(Uploader::class)) {
-            $loader->load('content_uploader_listener.xml');
         }
 
         $this->loadRoutingApiPrefix($config, $container);
