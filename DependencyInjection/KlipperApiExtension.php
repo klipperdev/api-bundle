@@ -41,7 +41,6 @@ class KlipperApiExtension extends Extension
         $loader->load('body_listener.xml');
         $loader->load('serializer.xml');
         $loader->load('format.xml');
-        $loader->load('resource_listener.xml');
         $loader->load('controller.xml');
         $loader->load('routing_api_prefix.xml');
 
