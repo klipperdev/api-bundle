@@ -28,5 +28,9 @@
             <tag name="klipper_api.view_transformer" />
             <argument type="service" id="klipper_doctrine_extensions_extra.request_query.searchable" />
         </service>
+
+        <service id="klipper_api.view_transformer.extra_value" class="Klipper\Bundle\ApiBundle\View\Transformer\ExtraValueTransformer" public="false">
+            <tag name="klipper_api.view_transformer" />
+        </service>
     </services>
 </container>

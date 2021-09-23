@@ -12,34 +12,15 @@
 namespace Klipper\Bundle\ApiBundle\Serializer\Listener;
 
 use JMS\Serializer\EventDispatcher\Events;
-use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use Klipper\Component\DoctrineExtra\Util\ClassUtils;
-use Klipper\Component\Metadata\MetadataManagerInterface;
 use Klipper\Component\Metadata\ObjectMetadataInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author François Pluchino <francois.pluchino@klipper.dev>
  */
-class JmsFieldFilterSubscriber implements EventSubscriberInterface
+class JmsFieldFilterSubscriber extends AbstractJmsFilterSubscriber
 {
-    protected MetadataManagerInterface $metadataManager;
-
-    protected RequestStack $requestStack;
-
-    protected ?array $cacheFields = null;
-
-    /**
-     * @param MetadataManagerInterface $metadataManager The metadata manager
-     * @param RequestStack             $requestStack    The request stack
-     */
-    public function __construct(MetadataManagerInterface $metadataManager, RequestStack $requestStack)
-    {
-        $this->metadataManager = $metadataManager;
-        $this->requestStack = $requestStack;
-    }
-
     public static function getSubscribedEvents(): array
     {
         return [
@@ -90,7 +71,7 @@ class JmsFieldFilterSubscriber implements EventSubscriberInterface
      *
      * @return false|string
      */
-    private function getMetadataFieldName(ObjectMetadataInterface $meta, $propertyName)
+    private function getMetadataFieldName(ObjectMetadataInterface $meta, string $propertyName)
     {
         $fieldMetaName = false;
 
@@ -109,48 +90,5 @@ class JmsFieldFilterSubscriber implements EventSubscriberInterface
         }
 
         return $fieldMetaName;
-    }
-
-    /**
-     * Get the request query search.
-     */
-    private function getFields(): array
-    {
-        if (null === $this->cacheFields) {
-            $this->cacheFields = [];
-            $requestFields = $this->getRequestFields();
-
-            if (!empty($requestFields)) {
-                $fields = array_map('trim', explode(',', $requestFields));
-
-                foreach ($fields as $field) {
-                    $exp = array_map('trim', explode('.', $field));
-
-                    if (2 === \count($exp)) {
-                        $this->cacheFields[$exp[0]][$exp[1]] = true;
-                    } else {
-                        $this->cacheFields['_global'][$exp[0]] = true;
-                    }
-                }
-            }
-        }
-
-        return $this->cacheFields;
-    }
-
-    /**
-     * Get the fields config in request.
-     */
-    private function getRequestFields(): string
-    {
-        if ($request = $this->requestStack->getCurrentRequest()) {
-            if ($request->headers->has('x-fields')) {
-                return (string) $request->headers->get('x-fields', '');
-            }
-
-            return (string) $request->query->get('fields', '');
-        }
-
-        return '';
     }
 }
