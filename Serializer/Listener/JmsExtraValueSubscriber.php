@@ -57,6 +57,7 @@ class JmsExtraValueSubscriber extends AbstractJmsFilterSubscriber
 
         /** @var SerializationVisitorInterface $visitor */
         $visitor = $event->getVisitor();
+
         /** @var array|object $object */
         $object = $event->getObject();
         $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass(ClassUtils::getClass($object));

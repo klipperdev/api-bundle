@@ -715,6 +715,7 @@ class ControllerHandler
         $form = !$action instanceof ProcessFormInterface || $action->isProcessForm()
             ? $this->formHandler->processForm($action, $object)
             : $object;
+
         /** @var ResourceInterface $res */
         $res = $domain->{$actionMethod}($form);
 
@@ -762,6 +763,7 @@ class ControllerHandler
 
         $forms = $this->formHandler->processForms($config);
         $actionMethod = lcfirst(substr(strrchr(\get_class($action), '\\'), 1));
+
         /** @var ResourceListInterface $res */
         $res = $domain->{$actionMethod}($forms, !$config->isTransactional());
 
