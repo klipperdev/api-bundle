@@ -11,6 +11,8 @@
             <argument type="collection" />
         </service>
 
+        <service id="Klipper\Bundle\ApiBundle\Controller\ControllerViewTransformerRegistry" alias="klipper_api.controller_view_transformer_registry"/>
+
         <!-- Standard Controller -->
         <service id="Klipper\Bundle\ApiBundle\Controller\StandardController"
                  public="true">
