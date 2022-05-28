@@ -11,6 +11,8 @@
 
 namespace Klipper\Bundle\ApiBundle\Serializer;
 
+use Klipper\Bundle\ApiBundle\ViewGroups;
+
 /**
  * Stores the serialization or deserialization context (groups, version, ...).
  *
@@ -27,6 +29,11 @@ final class Context
     private ?bool $maxDepthChecks = null;
 
     private ?bool $serializeNull = null;
+
+    public function __construct()
+    {
+        $this->addGroup(ViewGroups::DEFAULT_GROUP);
+    }
 
     /**
      * Sets an attribute.

@@ -13,7 +13,6 @@ namespace Klipper\Bundle\ApiBundle\View;
 
 use Klipper\Bundle\ApiBundle\Serializer\Context;
 use Klipper\Bundle\ApiBundle\Serializer\SerializerInterface;
-use Klipper\Bundle\ApiBundle\ViewGroups;
 use Klipper\Component\Security\Identity\RoleSecurityIdentity;
 use Klipper\Component\Security\Identity\SecurityIdentityManagerInterface;
 use Klipper\Component\Security\Organizational\OrganizationalUtil;
@@ -100,7 +99,7 @@ class ViewHandler implements ConfigurableViewHandlerInterface
             $format = $request->getRequestFormat();
         }
 
-        $view->getContext()->addGroups(array_merge([ViewGroups::DEFAULT_GROUP], $this->getRoleGroups()));
+        $view->getContext()->addGroups($this->getRoleGroups());
 
         $response = $this->initResponse($view, $format);
 
