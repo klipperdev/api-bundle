@@ -27,6 +27,8 @@ class JmsExtraValueSubscriber extends AbstractJmsFilterSubscriber
 {
     private PropertyNamingStrategyInterface $propertyNamingStrategy;
 
+    private array $cache = [];
+
     public function __construct(
         MetadataManagerInterface $metadataManager,
         RequestStack $requestStack,
@@ -49,33 +51,41 @@ class JmsExtraValueSubscriber extends AbstractJmsFilterSubscriber
 
     public function onPostSerialize(ObjectEvent $event): void
     {
-        if ((!\is_object($event->getObject()) && !\is_array($event->getObject()))
-            || !$event->getVisitor() instanceof SerializationVisitorInterface
+        $visitor = $event->getVisitor();
+        $object = $event->getObject();
+
+        if ((!\is_object($object) && !\is_array($object))
+            || (\is_array($object) && !isset($event->getType()['name']))
+            || !$visitor instanceof SerializationVisitorInterface
         ) {
             return;
         }
 
-        /** @var SerializationVisitorInterface $visitor */
-        $visitor = $event->getVisitor();
-
         /** @var array|object $object */
-        $object = $event->getObject();
-        $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass(ClassUtils::getClass($object));
-        $fields = $this->getFields();
+        $class = \is_object($object) ? ClassUtils::getClass($object) : ClassUtils::getRealClass($event->getType()['name']);
 
-        if (null === $classMeta || !$this->metadataManager->has($classMeta->name)) {
-            return;
+        if (!\array_key_exists($class, $this->cache)) {
+            $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass($class);
+
+            if (null === $classMeta || !$this->metadataManager->has($classMeta->name)) {
+                $this->cache[$class] = false;
+            } else {
+                $this->cache[$class] = $this->metadataManager->get($classMeta->name)->getName();
+            }
         }
 
-        $meta = $this->metadataManager->get($classMeta->name);
-        $metaName = $meta->getName();
+        $metaName = $this->cache[$class];
+
+        if (false === $metaName) {
+            return;
+        }
 
         /** @var string[] $propNames */
         $propNames = \is_object($object) ? array_keys(get_object_vars($object)) : array_keys($object);
 
         foreach ($propNames as $propName) {
             if (0 === strpos($propName, '@')) {
-                $staticPropMeta = new StaticPropertyMetadata($classMeta->name, $propName, null);
+                $staticPropMeta = new StaticPropertyMetadata($class, $propName, null);
                 $staticPropMeta->serializedName = null;
                 $staticPropMeta->serializedName = $this->propertyNamingStrategy->translateName($staticPropMeta);
 

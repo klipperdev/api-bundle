@@ -21,6 +21,8 @@ use Klipper\Component\Metadata\ObjectMetadataInterface;
  */
 class JmsFieldFilterSubscriber extends AbstractJmsFilterSubscriber
 {
+    private array $cache = [];
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -44,22 +46,26 @@ class JmsFieldFilterSubscriber extends AbstractJmsFilterSubscriber
 
         /** @var object $object */
         $object = $event->getObject();
-        $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass(ClassUtils::getClass($object));
+        $class = ClassUtils::getClass($object);
 
-        if (null === $classMeta || !$this->metadataManager->has($classMeta->name)) {
-            return;
-        }
+        if (!\in_array($class, $this->cache, true)) {
+            $classMeta = $event->getContext()->getMetadataFactory()->getMetadataForClass($class);
 
-        $meta = $this->metadataManager->get($classMeta->name);
-        $metaName = $meta->getName();
+            if (null !== $classMeta && $this->metadataManager->has($classMeta->name)) {
+                $meta = $this->metadataManager->get($classMeta->name);
+                $metaName = $meta->getName();
 
-        foreach (array_keys($classMeta->propertyMetadata) as $propertyName) {
-            $fieldMetaName = $this->getMetadataFieldName($meta, $propertyName);
+                foreach (array_keys($classMeta->propertyMetadata) as $propertyName) {
+                    $fieldMetaName = $this->getMetadataFieldName($meta, $propertyName);
 
-            if (!isset($fields['_global'][$fieldMetaName])
-                    && !isset($fields[$metaName][$fieldMetaName])) {
-                unset($classMeta->propertyMetadata[$propertyName]);
+                    if (!isset($fields['_global'][$fieldMetaName])
+                        && !isset($fields[$metaName][$fieldMetaName])) {
+                        unset($classMeta->propertyMetadata[$propertyName]);
+                    }
+                }
             }
+
+            $this->cache[] = $class;
         }
     }
 
