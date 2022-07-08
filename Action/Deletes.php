@@ -52,7 +52,7 @@ final class Deletes implements DeleteActionInterface
      *
      * @return object[]
      */
-    public function getObjects(): object
+    public function getObjects(): array
     {
         return $this->objects;
     }
