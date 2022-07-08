@@ -253,6 +253,7 @@ class StandardController
         ConverterRegistryInterface $converterRegistry
     ): Response {
         $config = $this->getFormConfigList($request, $helper, $metadataManager);
+        $config->setCreation(false);
         $dataList = $this->getDataList($request, $translator, $converterRegistry, $config);
         $action = Deletes::build($dataList);
         $action->setReturnedObject($request->attributes->getBoolean('_action_returned_object'));
@@ -295,6 +296,7 @@ class StandardController
         ConverterRegistryInterface $converterRegistry
     ): Response {
         $config = $this->getFormConfigList($request, $helper, $metadataManager);
+        $config->setCreation(false);
         $dataList = $this->getDataList($request, $translator, $converterRegistry, $config);
         $action = Undeletes::build($dataList);
         $this->addGroups($request, ['Views', 'Undeletes']);
@@ -467,6 +469,7 @@ class StandardController
 
         try {
             $dataList = $config->findList($dataList);
+            $dataList = $config->convertObjects($dataList);
         } catch (InvalidResourceException $e) {
             throw new InvalidResourceException($translator->trans('form_handler.results_field_required', [], 'KlipperResource'));
         }
