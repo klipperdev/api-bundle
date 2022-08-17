@@ -36,6 +36,6 @@ class HeaderVersionResolver implements VersionResolverInterface
 
         $header = $request->headers->get($this->headerName);
 
-        return is_scalar($header) ? $header : (string) $header;
+        return \is_scalar($header) ? $header : (string) $header;
     }
 }
