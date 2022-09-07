@@ -37,7 +37,6 @@ class KlipperApiExtension extends Extension
         $loader->load('request_matcher.xml');
         $loader->load('handler.xml');
         $loader->load('versioning.xml');
-        $loader->load('body_listener.xml');
         $loader->load('serializer.xml');
         $loader->load('format.xml');
         $loader->load('controller.xml');
